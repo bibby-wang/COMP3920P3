@@ -20,7 +20,7 @@
 <arrdeclsb> ::= , <arrdecls> | ¦Å
 <arrdecl> ::= <id> : <typeid>
 <func> ::= function <id> ( <plist> ) : <rtype> <funcbody>
-<rtype> ::= <stype> | void
+<rtype> ::= integer | real | boolean | void
 <plist> ::= <params> | ¦Å
 <params> ::= <param> <paramsb> 
 <paramsb> ::= , <params> | ¦Å
@@ -51,14 +51,14 @@
 <returnstatb> ::= <expr> | ¦Å
 <vlist> ::= <var> <vlistb>
 <vlistb> ::= , <vlist> | ¦Å
-<var> ::= <id> | <varb>
-<varb>::= <id> [<expr>] . <id> 
+<var> ::= <id> <varb>
+<varb>::=  [<expr>] . <id> | ¦Å
 <elist> ::= <bool> <elistb>
 <elistb> ::= , <elist> | ¦Å 
 <bool> ::=  <rel> <boolb> 
 <boolb> ::= <logop> <rel> <boolb> | ¦Å
-<rel> ::= not <expr> <relop> <expr> | <expr> <relb>
-<relb> ::= <expr> <relop> <expr> | ¦Å
+<rel> ::= not <expr> <relop> <expr> | <expr> <relb> 
+<relb> ::= <relop> <expr>  | ¦Å
 <logop> ::= and | or | xor
 <relop> ::= == | != | > | <= | < | >=
 <expr> ::= <fact> <exprb>
