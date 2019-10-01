@@ -1,0 +1,74 @@
+/-- Student Name: Binbin Wang
+/-- No: c3214157
+/-- COMP3290
+/-- Part 2 - CD19 Source File Test Programs
+/-- D- several that you expect to run successfully when later compiled by your compiler (and also part 3).
+/-- These should include at least one that just has a main program and simple variables, one that has arrays, and one that has function(s)/procedure(s) using all three methods of parameter passing that are allowed in CD19.
+
+CD19 d
+constants
+    count= 5
+
+types
+    num is 
+        xx : integer,
+        xy : real
+    end
+num is array [count] of num
+
+/--arrays
+arrays
+    numberCount : num
+
+
+function ff(i : real): void
+    x : real
+
+    begin
+
+        x = i;
+
+        if( x == 10 )
+            printline "you got 10" ;
+        else
+            printline "you not got 10" ;
+        end 
+    end
+
+
+main
+
+    x : real,
+    y : real,
+    z : real
+	begin
+	    for(i = 0; i < COUNT)
+
+            numberCount[i].xx = i+1 ;
+            numberCount[i].xy = (i+1)/2 ;
+
+            i = i + 1;
+        end
+	
+	
+	h : real,
+		for(i = 0; i < COUNT)
+
+            printline numberCount[i].xx ;
+            printline numberCount[i].xy ;
+
+            i = i + 1;
+			h = numberCount[i].xy;
+			ff(h) ;
+
+        end
+
+        x = 1 ;
+        y = 2 ;
+        z= x+y ;
+
+        printline z ;
+
+    end
+
+CD19 d

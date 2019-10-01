@@ -1,0 +1,2 @@
+NPROG  Polygon NGLOB  NILIST NINIT  maxPoints NILIT  
+20 

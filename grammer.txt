@@ -65,8 +65,8 @@
 <exprb> ::= + <fact> <exprb> | - <fact> <exprb> | ¦Å
 <fact> ::= <term> <factb>
 <factb> ::= * <term> <factb> | / <term> <factb> | % <term> <factb> | ¦Å
-<term> ::=  <exponent> <termb> 
-<termb> ::=  ^ <exponent> <termb> | ¦Å
+<term> ::=  <exponent> <power> 
+<power> ::=  ^ <exponent> <power> | ¦Å
 <exponent> ::= <var> | <intlit> | <reallit> | <fncall> | true | false
 <exponent> ::= ( <bool> )
 <fncall> ::= <id> ( <fncallb> )

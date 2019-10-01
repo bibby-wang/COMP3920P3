@@ -10,10 +10,12 @@
 	// token = scanner . gettoken( );
 	// scanner . printToken(token);
 // }
-
+import java.io.PrintWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 public class A3{
 	
-	public static void main(String[] args)  {
+	public static void main(String[] args) throws IOException{
 		// check file name
 		
 		if (args.length>0){
@@ -24,20 +26,30 @@ public class A3{
 				//sacnner
 				Scanner scanner=new Scanner(args[i]);
 				//parser
-				//Parser parser =new Parser();
+
 				
 				Token tempToken;
+				
 				int countToken=0;
-				while (!scanner.eof()){
-					countToken++;
-					tempToken = scanner.getToken();
-					// System.out.println(tempToken.toString());
-					scanner.printToken(tempToken);
+				// while (!scanner.eof()){
+					// countToken++;
+					// tempToken = scanner.getToken();
+					// // System.out.println(tempToken.toString());
+					// scanner.printToken(tempToken);
 					
 					
-				}
+				// }
+				
+				Parser parser=new Parser(scanner);
+				
+				PrintWriter outFile= new PrintWriter(new FileWriter("_parser_"+args[i]));
+				
+				TreeNode.printTree(outFile, parser.program());
+				outFile.close();
+				
 				// System.out.println("\r\n Tokens count is: "+countToken);
 			}
+			
 		}else{
 			// erro of file name
 			System.out.println("Empty File name args[] is Null");

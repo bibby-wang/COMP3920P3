@@ -1,0 +1,17 @@
+/-- Student Name: Binbin Wang
+/-- No: c3214157
+/-- COMP3290
+/-- Part 2 - CD19 Source File Test Programs
+/-- A --at least one that fails syntactically (but succeeds lexically);
+/--pretty self explanitory
+
+CD19 a
+MAIN
+	x : real /-- fails need ,
+	y : integer
+BEGIN
+	x = 2,3 ; /-- fails can not be , for a real number
+	y = -2 ; /--  fails negative number Should be 0-2;
+	printline x    /-- fails need ;
+END
+CD19 a

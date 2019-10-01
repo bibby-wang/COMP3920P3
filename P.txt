@@ -1,0 +1,67 @@
+/-- Student Name: Binbin Wang
+/-- No: c3214157
+/-- COMP3290
+/-- Part 2 - CD19 Source File Test Programs
+/-- E- compute the area of a polygon
+
+CD19 Polygon
+
+constants
+	maxPoints = 20
+
+types
+	point is
+		x : real,
+		y : real
+	END
+points is array [maxPoints] of point	
+
+arrays
+	thePolygon : points
+
+
+function getArea(points : array): real
+
+        area : real,
+        points : array
+
+    BEGIN
+
+        points = array;
+
+        /-- the formula of ompute the area of a polygon
+        for(i = 0; i < maxPoints-1)
+
+            area = area + ((points[i].x * points[i+1].y) - (points[i].y * points[i+1].x)) ;
+
+        END
+
+        /-- half the total calculation
+        area = area/2;
+
+        return area;
+    END
+
+main
+
+    i : boolean
+    
+    begin
+
+        /-- get the points from input
+        for(i = 0; i < maxPoints-1)
+
+            printline "input the x point";
+            thePolygon[i].x = input;
+
+            printline "input the y point";
+            thePolygon[i].y = input;
+
+        end
+
+        /-- print out the area of polygon
+        printline "The area is: " + getArea(thePolygon);
+
+    end
+
+CD19 Polygon

@@ -1,0 +1,21 @@
+/-- Student Name: Binbin Wang
+/-- No: c3214157
+/-- COMP3290
+/-- Part 2 - CD19 Source File Test Programs
+/-- B- at least on that fails semantically(but suceeds lexically and syntactically)
+
+CD19 b
+MAIN
+	x  : string ,
+	y : integer,
+	z : integer
+    
+BEGIN
+	
+	z = 2;
+	y = x;  /-- fails different type
+	
+	printline m ;   /--fails  m has never been defined
+    
+END CD19 b 
+

@@ -1,0 +1,17 @@
+/-- Student Name: Binbin Wang
+/-- No: c3214157
+/-- COMP3290
+/-- Part 2 - CD19 Source File Test Programs
+/-- C- what you consider to be the simplest possible working program in CD19
+/--prints 
+
+CD19 c
+	main
+		x : boolean        /-- cannot be empty
+	begin
+
+		printline "c3214157" ;
+
+	end 
+
+CD19 c 
