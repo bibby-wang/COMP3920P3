@@ -57,7 +57,7 @@
 <bool> ::=  <rel> <boolb> 
 <boolb> ::= <logop> <rel> <boolb> | ¦Å
 <rel> ::= not <expr> <relop> <expr> | <expr> <relb> 
-<relb> ::= <relop> <expr>  | ¦Å
+<relb> ::= <relop> <expr> | ¦Å
 <logop> ::= and | or | xor
 <relop> ::= == | != | > | <= | < | >=
 <expr> ::= <term> <exprb>
