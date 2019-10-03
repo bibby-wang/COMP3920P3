@@ -118,6 +118,7 @@ public class Parser {
 	}
 	
 	// NINIT
+	//<init> ::= <id> = <expr>
 	private TreeNode init(){
 		TreeNode node = new TreeNode(TreeNode.NINIT);
 		StRec stRec = new StRec();
@@ -140,7 +141,7 @@ public class Parser {
 		return node;
 	}
 	
-	// 
+	// <types> ::= types <typelist> | ε
 	private TreeNode types(){
 		if (currentToken.value() != Token.TTYPS)return null;
 
@@ -151,7 +152,7 @@ public class Parser {
 		return typelist();
 	}
 	
-	// 
+	// <arrays> ::= arrays <arrdecls> | ε
 	private TreeNode arrays(){
 		if (currentToken.value() != Token.TARRS)return null;
 
@@ -163,6 +164,7 @@ public class Parser {
 	}
 	
 	// NFUNCS
+	//<funcs> ::= <func> <funcs> | ε
 	private TreeNode funcs(){
 		TreeNode node = new TreeNode(TreeNode.NFUNCS);
 		if (currentToken.value() != Token.TFUNC)return null;
@@ -174,166 +176,448 @@ public class Parser {
 	}
 	
 	// NMAIN
+	//<mainbody> ::= main <slist> begin <stats> end CD19 <id>
 	private TreeNode mainbody(){
-		
+		String errMsg="Invalid Mainbody: ";
 		TreeNode node = new TreeNode(TreeNode.NMAIN);
 		//need TMAIN token
-		if (!checkToken(Token.TMAIN, "Invalid Mainbody: Keyword missing, Not found 'MAIN'.")) return null;
+		if (!checkToken(Token.TMAIN, errMsg+: Keyword missing: Not found 'MAIN'.")) return null;
 		currentToken = followToken;
 		followToken = scanner.getToken();
 
 		node.setLeft(slist());
 
 		//need TBEGN token
-		if (!checkToken(Token.TBEGN, "Invalid Mainbody: Keyword missing, Not found 'BEGIN'.")) return null;
+		if (!checkToken(Token.TBEGN, errMsg+"Keyword missing: Not found 'BEGIN'.")) return null;
 		currentToken = followToken;
 		followToken = scanner.getToken();
 
 		node.setRight(stats());
 
 		//need TEND token
-		if (!checkToken(Token.TEND, "Invalid Mainbody: Keyword missing, Not found 'END'.")) return null;
+		if (!checkToken(Token.TEND, errMsg+"Keyword missing: Not found 'END'.")) return null;
 		currentToken = followToken;
 		followToken = scanner.getToken();
 
 		//need TCD19 token
-		if (!checkToken(Token.TCD19, "Invalid Mainbody: Keyword missing, Not found 'CD19'.")) return null;
+		if (!checkToken(Token.TCD19, errMsg+"Keyword missing: Not found 'CD19'.")) return null;
 		currentToken = followToken;
 		followToken = scanner.getToken();
 
 		//need TIDEN token
-		if (!checkToken(Token.TIDEN, "Invalid Mainbody: Not found ID name.")) return null;
+		if (!checkToken(Token.TIDEN, errMsg+"Not found ID name.")) return null;
 		
 		//need TEOF token
 		currentToken = followToken;
-		if (!checkToken(Token.TEOF, "Invalid Mainbody: Terminator not found.")) return null;
+		if (!checkToken(Token.TEOF, errMsg+"Terminator not found.")) return null;
 
 		return node;
 	}
 	
+	
+
 	// NSDLST
+	//<slist> ::= <id> : <stype> <slistb>
 	private TreeNode slist(){
 		TreeNode node = new TreeNode(TreeNode.NSDLST);
-		//Enter leftNode node
-		TreeNode sdecimal = sdecl();
-
-		if (currentToken.value() != Token.TCOMA){
-			return sdecimal;
-		}
-
-		//consume token
+		String errMsg="Invalid Mainbody: ";
+		StRec stRec = new StRec();
+		//need TIDEN token
+		if (!checkToken(Token.TIDEN, errMsg+"Not found ID name.")) return null;
+		stRec.setName(currentToken.getStr());
 		currentToken = followToken;
 		followToken = scanner.getToken();
 
-		node.setLeft(sdecimal);
-		node.setRight(slist());
+		node.setSymbol(stRec);
+		//get next token
+		currentToken = followToken;
+		followToken = scanner.getToken();
+	
+		//need TCOLN token
+		if (!checkToken(Token.TCOLN, errMsg+"Not found ':'."))return null;
+
+		//get next token
+		currentToken = followToken;
+		followToken = scanner.getToken();
+
+		node.setLeft(stype());
+		node.setRight(slistb());
 
 		return node;
 	}
 	
-	// 
+	// <slistb> ::= , <slist> | ε
 	private TreeNode slistb(){
 		
-		return null;
+		if (currentToken.value() != Token.TCOMA)return null;
+		//get next token
+		currentToken = followToken;
+		followToken = scanner.getToken();
+
+		return slist();
 	}
 	
 	// NTYPEL
+	// <typelist> ::= <type> <typelistb>
 	private TreeNode typelist(){
-		
-		return null;
+		TreeNode node = new TreeNode(TreeNode.NTYPEL);
+		node.setLeft(type());
+		node.setRight(typelistb());
+		return node;
 	}
 	
-	// 
+	// <typelistb> ::= <typelist> | ε
 	private TreeNode typelistb(){
-		
-		return null;
+		if (currentToken.value() != Token.TIDEN)return null;
+		return typelist();
 	}
-	
+
 	// NRTYPE  NATYPE
+	//<type> ::= <structid> is <fields> end | <typeid> is array [ <expr> ] of <structid>
 	private TreeNode type(){
+		TreeNode node = new TreeNode(TreeNode.NUNDEF);
+		StRec stRec = new StRec();//first id
+		String errMsg="Invalid struct or array declaration: ";
 		
-		return null;
+		//need TIDEN token
+		if (!checkToken(Token.TIDEN, errMsg+"Not found StructID or TypeID name.")) return null;
+		stRec.setName(currentToken.getStr());
+		currentToken = followToken;
+		followToken = scanner.getToken();
+
+		node.setSymbol(stRec);
+
+		// need TIS token
+		if (!checkToken(Token.TIS, errMsg+"Keyword missing: Not found 'IS'.")) return null;
+		currentToken = followToken;
+		followToken = scanner.getToken();
+
+		//NRTYPE node or NATYPE node
+		if (currentToken.value() != Token.TARAY){
+			//NRTYPE
+			node.setValue(TreeNode.NRTYPE);
+			node.setLeft(fields());
+			//need TEND token
+			if (!checkToken(Token.TEND, errMsg+"Keyword missing: Not found 'END'.")) return null;
+			currentToken = followToken;
+			followToken = scanner.getToken();
+			stRec.setType("Struct");
+			symbolTable.put(stRec.getName(), stRec);
+			return node;
+		}
+		//NATYPE
+		node.setValue(TreeNode.NATYPE);
+		currentToken = followToken;
+		followToken = scanner.getToken();
+
+		//need TLBRK token
+		if (!checkToken(Token.TLBRK, errMsg+"Not found '['.")) return null;
+		currentToken = followToken;
+		followToken = scanner.getToken();
+
+		node.setLeft(expr());
+
+		//need TRBRK token
+		if (!checkToken(Token.TRBRK, errMsg+"Not found ']'.")) return null;
+		currentToken = followToken;
+		followToken = scanner.getToken();
+		
+		stRec.setType("Type");
+		symbolTable.put(stRec.getName(), stRec);
+		
+		//need TOF token
+		if (!checkToken(Token.TOF, errMsg+"Keyword missing: Not found 'OF'.")) return null;
+		currentToken = followToken;
+		followToken = scanner.getToken();
+
+		//need TIDEN token
+		if (!checkToken(Token.TIDEN, errMsg+"Not found StructID name.")) return null;
+		
+		//StReak for the array struct
+		StRec stRec2 = new StRec();
+		stRec2.setName(currentToken.getStr());		
+		stRec2.setType("Struct");
+		node.setType(stRec2);
+		symbolTable.put(stRec2.getName(), stRec2);	
+		
+		currentToken = followToken;
+		followToken = scanner.getToken();
+
+		return node;		
+
 	}
-	
+
 	// NFLIST
+	//<fields> ::= <id> : <stype> <fieldsb>
 	private TreeNode fields(){
+
+		TreeNode node = new TreeNode(TreeNode.NFLIST);
+		StRec stRec = new StRec();
+		String errMsg="Invalid struct declaration: ";
 		
-		return null;
+		//need TIDEN token
+		if (!checkToken(Token.TIDEN, errMsg+"Not found ID name.")) return null;
+	
+		//get next token
+		currentToken = followToken;
+		followToken = scanner.getToken();
+	
+		//need TCOLN token
+		if (!checkToken(Token.TCOLN, errMsg+"Not found ':'."))return null;
+
+		//get next token
+		currentToken = followToken;
+		followToken = scanner.getToken();
+???
+		node.setLeft(id());
+		node.setLeft(stype());
+		node.setRight(fieldsb());
+
+		return node;		
+		
 	}
 	
-	// 
+	// <fieldsb> ::= , <fields> | ε
 	private TreeNode fieldsb(){
 		
-		return null;
+
+		if (currentToken.value() != Token.TCOMA)return null;
+		//get next token
+		currentToken = followToken;
+		followToken = scanner.getToken();
+		
+		return fields();
 	}
 	
 	// NSDECL
+	//<sdecl> ::= <id> : <stype>
 	private TreeNode sdecl(){
+		String errMsg = "Invalid variable declaration: ";
+		TreeNode node = new TreeNode(TreeNode.NSDECL);
+		StRec stRec = new StRec();
 		
-		return null;
+		//need TIDEN token
+		if (!checkToken(Token.TIDEN, errMsg+"Not found ID name.")) return null;
+		stRec.setName(currentToken.getStr());
+		currentToken = followToken;
+		followToken = scanner.getToken();
+
+		//need TCOLN token
+		if (!checkToken(Token.TCOLN, errMsg+"Not found ':'")) return null;
+		currentToken = followToken;
+		followToken = scanner.getToken();
+
+		//Resolution type TINTG or TREAL or TBOOL token
+		//<stype> ::= integer | real | boolean
+		if (currentToken.value() == Token.TINTG){
+			stRec.setType("integer");
+		}else if (currentToken.value() == Token.TREAL){
+			stRec.setType("real");
+		}else if (currentToken.value() == Token.TBOOL){
+			stRec.setType("boolean");
+		}else{
+			if (!checkToken(Token.TINTG, errMsg+"Not found integer or real or boolen type")) return null;
+		}
+		currentToken = followToken;
+		followToken = scanner.getToken();
+
+		node.setSymbol(stRec);
+		symbolTable.put(stRec.getName(), stRec);
+		return node;		
+
 	}
 	
 	// NALIST
+	//<arrdecls> ::= <id> : <typeid> <arrdeclsb>
 	private TreeNode arrdecls(){
+		TreeNode node = new TreeNode(TreeNode.NALIST);
+		String errMsg="Invalid struct declaration: ";
 		
-		return null;
+		//need TIDEN token
+		if (!checkToken(Token.TIDEN, errMsg+"Not found ID name.")) return null;
+	
+		//get next token
+		currentToken = followToken;
+		followToken = scanner.getToken();
+		
+		//need TCOLN token
+		if (!checkToken(Token.TCOLN, errMsg+"Not found ':'")) return null;
+		currentToken = followToken;
+		followToken = scanner.getToken();
+
+		//need TIDEN token
+		if (!checkToken(Token.TIDEN, errMsg+"Not found TypeID name.")) return null;
+		
+		return node;
 	}
 	
-	// 
+	// <arrdeclsb> ::= , <arrdecls> | ε
 	private TreeNode arrdeclsb(){
-		
-		return null;
+		if (currentToken.value() != Token.TCOMA) return null;	
+		//get next token
+		currentToken = followToken;
+		followToken = scanner.getToken();
+		return arrdecls()
 	}
 	
 	// NARRD
+	//<arrdecl> ::= <id> : <typeid>
 	private TreeNode arrdecl(){
+		String errMsg = "Invalid array declaration: ";
+		TreeNode node = new TreeNode(TreeNode.NARRD);
+		StRec stRec = new StRec();
+
+		//need TIDEN token
+		if (!checkToken(Token.TIDEN, errMsg+"Not found ID name.")) return null;
+		stRec.setName(currentToken.getStr());
+		currentToken = followToken;
+		followToken = scanner.getToken();
+
+		//need TCOLN token
+		if (!checkToken(Token.TCOLN, errMsg+"Not found ':'.")) return null;
+		currentToken = followToken;
+		followToken = scanner.getToken();
 		
-		return null;
+		//need TIDEN token
+		if (!checkToken(Token.TIDEN, errMsg+"Not found TypeID name.")) return null;
+		stRec.setType(currentToken.getStr());
+		currentToken = followToken;
+		followToken = scanner.getToken();
+
+		node.setSymbol(stRec);
+		symbolTable.put(stRec.getName(), stRec);
+
+		return node;
 	}
 	
 	// NFUND
+	//<func> ::= function <id> ( <plist> ) : <rtype> <locals> begin <stats> end
 	private TreeNode func(){
-		
-		return null;
+		String errMsg = "Invalid function declaration";
+		TreeNode node = new TreeNode(TreeNode.NFUND);
+		StRec stRec = new StRec();
+
+		//need TFUNC token
+		if (!checkToken(Token.TFUNC, errMsg+"Keyword missing: Not found 'FUNCTION'.")) return null;
+		currentToken = followToken;
+		followToken = scanner.getToken();
+
+		//neeed TIDEN token
+		if (!checkToken(Token.TIDEN, errMsg+"Not found ID name.")) return null;
+		stRec.setName(currentToken.getStr());
+		currentToken = followToken;
+		followToken = scanner.getToken();
+
+		//need TLPAR token
+		if (!checkToken(Token.TLPAR, errMsg+"Not found '('.")) return null;
+		currentToken = followToken;
+		followToken = scanner.getToken();
+
+		node.setLeft(plist());
+
+		//need TRPAR token
+		if (!checkToken(Token.TRPAR, errMsg+"Not found ')'.")) return null;
+		currentToken = followToken;
+		followToken = scanner.getToken();
+
+		//need TCOLN token
+		if (!checkToken(Token.TCOLN, errMsg+"Not found ':'.")) return null;
+		currentToken = followToken;
+		followToken = scanner.getToken();
+
+		//Resolution type TINTG or TREAL or TBOOL token
+		//<rtype> ::= integer | real | boolean | void
+		if (currentToken.value() == Token.TINTG){
+			stRec.setType("integer");
+		}else if (currentToken.value() == Token.TREAL){
+			stRec.setType("real");
+		}else if (currentToken.value() == Token.TBOOL){
+			stRec.setType("boolean");
+		}else if (currentToken.value() == Token.TVOID){
+			stRec.setType("void");
+		}else{
+			if (!checkToken(Token.TINTG, errMsg+"Not found integer or real or boolen or void type.")) return null;
+		}
+		currentToken = followToken;
+		followToken = scanner.getToken();
+
+		node.setMiddle(locals());
+
+		//need TBEGN token
+		if (!checkToken(Token.TBEGN, errMsg+"Keyword missing: Not found 'BEGIN'.")) return null;
+		currentToken = followToken;
+		followToken = scanner.getToken();
+
+		node.setRight(stats());
+
+		//need TEND token
+		if (!checkToken(Token.TEND, errMsg+"Keyword missing: Not found 'END'.")) return null;
+		currentToken = followToken;
+		followToken = scanner.getToken();
+
+		node.setSymbol(stRec);
+		symbolTable.put(stRec.getName(), stRec);
+
+		return node;
 	}
 	
-	// 
-	private TreeNode rtype(){
-		
-		return null;
-	}
-	
-	// NPLIST
+
+	// <plist> ::= <params> | ε
 	private TreeNode plist(){
-		
+		if (currentToken.value() == Token.TIDEN || currentToken.value() == Token.TCONS){
+			return params();
+		}
 		return null;
 	}
 	
-	// NSIMP
+	//  NPLIST
+	//<params> ::= <param> <paramsb> 
 	private TreeNode params(){
-		
-		return null;
+		TreeNode node = new TreeNode(TreeNode.NPLIST);
+		node.setLeft(params());
+		node.setRight(paramsb());
+		return node;
 	}
 	
-	// 
+	//  <paramsb> ::= , <params> | ε
 	private TreeNode paramsb(){
+		if (currentToken.value() != Token.TCOMA)return null;
+		//get next token
+		currentToken = followToken;
+		followToken = scanner.getToken();
 		
-		return null;
+		return params();
 	}
 	
-	// NARRP
+	// NSIMP NARRP NARRC
+	//<param> ::= const <id> : <typeid> | <decl>
 	private TreeNode param(){
-		
-		return null;
+		??
+		TreeNode node = new TreeNode(TreeNode.NUNDEF);
+		if (currentToken.value() == Token.TCONS){
+			//get next token
+			currentToken = followToken;
+			followToken = scanner.getToken();
+
+			node.setValue(TreeNode.NARRC);
+			node.setLeft(arrdecl());
+			return node;
+		}
+
+		TreeNode check = decl();
+		if (check.getValue() == TreeNode.NARRD){
+			node.setValue(TreeNode.NARRP);
+		}else if (check.getValue() == TreeNode.NSDECL){
+			node.setValue(TreeNode.NSIMP);
+		}else{
+			return null;
+		}
+		node.setLeft(check);
+		return node;
 	}
 	
-	// 
-	private TreeNode funcbody(){
-		
-		return null;
-	}
 	
-	// NARRC
+	//
 	private TreeNode locals(){
 		
 		return null;
@@ -351,8 +635,15 @@ public class Parser {
 		return null;
 	}
 	
-	// 
+	// <decl> ::= <id> : <declb>
 	private TreeNode decl(){
+		
+		return null;
+	
+	}
+	
+	//<declb> ::= <stype> | <typeid>
+	private TreeNode declb(){
 		
 		return null;
 	}
@@ -565,7 +856,7 @@ public class Parser {
 		}
 	}
 	
-	// 
+	// ?????
 	private TreeNode relb(){
 		
 		return null;

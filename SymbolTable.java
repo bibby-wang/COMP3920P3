@@ -13,16 +13,16 @@ public class SymbolTable{
 	private HashMap<String, StRec> table;
 	protected SymbolTable prev;
 
-	public SymbolTable (SymbolTable prev){
+	public SymbolTable(SymbolTable prev){
 		table = new HashMap<>();
 		this.prev = prev;
 	}
 
-	public void put (String str, StRec sym){
+	public void put(String str, StRec sym){
 		table.put(str, sym);
 	}
 
-	public StRec get (String str){
+	public StRec get(String str){
 		for (SymbolTable elem = this; elem != null; elem = elem.prev){
 			StRec found = elem.table.get(str);
 			if (found != null){
