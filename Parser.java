@@ -181,7 +181,7 @@ public class Parser {
 		String errMsg="Invalid Mainbody: ";
 		TreeNode node = new TreeNode(TreeNode.NMAIN);
 		//need TMAIN token
-		if (!checkToken(Token.TMAIN, errMsg+: Keyword missing: Not found 'MAIN'.")) return null;
+		if (!checkToken(Token.TMAIN, errMsg+"Keyword missing: Not found 'MAIN'.")) return null;
 		currentToken = followToken;
 		followToken = scanner.getToken();
 
@@ -217,30 +217,11 @@ public class Parser {
 	
 
 	// NSDLST
-	//<slist> ::= <id> : <stype> <slistb>
+	//<slist> ::= <sdecl> <slistb>
 	private TreeNode slist(){
 		TreeNode node = new TreeNode(TreeNode.NSDLST);
-		String errMsg="Invalid Mainbody: ";
-		StRec stRec = new StRec();
-		//need TIDEN token
-		if (!checkToken(Token.TIDEN, errMsg+"Not found ID name.")) return null;
-		stRec.setName(currentToken.getStr());
-		currentToken = followToken;
-		followToken = scanner.getToken();
-
-		node.setSymbol(stRec);
-		//get next token
-		currentToken = followToken;
-		followToken = scanner.getToken();
-	
-		//need TCOLN token
-		if (!checkToken(Token.TCOLN, errMsg+"Not found ':'."))return null;
-
-		//get next token
-		currentToken = followToken;
-		followToken = scanner.getToken();
-
-		node.setLeft(stype());
+		
+		node.setLeft(sdecl());
 		node.setRight(slistb());
 
 		return node;
@@ -348,33 +329,14 @@ public class Parser {
 	}
 
 	// NFLIST
-	//<fields> ::= <id> : <stype> <fieldsb>
+	//<fields> ::= <sdecl> <fieldsb>
 	private TreeNode fields(){
-
 		TreeNode node = new TreeNode(TreeNode.NFLIST);
-		StRec stRec = new StRec();
-		String errMsg="Invalid struct declaration: ";
-		
-		//need TIDEN token
-		if (!checkToken(Token.TIDEN, errMsg+"Not found ID name.")) return null;
-	
-		//get next token
-		currentToken = followToken;
-		followToken = scanner.getToken();
-	
-		//need TCOLN token
-		if (!checkToken(Token.TCOLN, errMsg+"Not found ':'."))return null;
 
-		//get next token
-		currentToken = followToken;
-		followToken = scanner.getToken();
-???
-		node.setLeft(id());
-		node.setLeft(stype());
+		node.setLeft(sdecl());
 		node.setRight(fieldsb());
 
-		return node;		
-		
+		return node;
 	}
 	
 	// <fieldsb> ::= , <fields> | ε
@@ -428,26 +390,13 @@ public class Parser {
 	}
 	
 	// NALIST
-	//<arrdecls> ::= <id> : <typeid> <arrdeclsb>
+	//<arrdecls> ::= <arrdecl> <arrdeclsb>
 	private TreeNode arrdecls(){
 		TreeNode node = new TreeNode(TreeNode.NALIST);
-		String errMsg="Invalid struct declaration: ";
-		
-		//need TIDEN token
-		if (!checkToken(Token.TIDEN, errMsg+"Not found ID name.")) return null;
-	
-		//get next token
-		currentToken = followToken;
-		followToken = scanner.getToken();
-		
-		//need TCOLN token
-		if (!checkToken(Token.TCOLN, errMsg+"Not found ':'")) return null;
-		currentToken = followToken;
-		followToken = scanner.getToken();
 
-		//need TIDEN token
-		if (!checkToken(Token.TIDEN, errMsg+"Not found TypeID name.")) return null;
-		
+		node.setLeft(arrdecl());
+		node.setRight(arrdeclsb());
+
 		return node;
 	}
 	
@@ -457,7 +406,7 @@ public class Parser {
 		//get next token
 		currentToken = followToken;
 		followToken = scanner.getToken();
-		return arrdecls()
+		return arrdecls();
 	}
 	
 	// NARRD
@@ -590,9 +539,8 @@ public class Parser {
 	}
 	
 	// NSIMP NARRP NARRC
-	//<param> ::= const <id> : <typeid> | <decl>
+	//<param> ::= <decl> | const <arrdecl>
 	private TreeNode param(){
-		??
 		TreeNode node = new TreeNode(TreeNode.NUNDEF);
 		if (currentToken.value() == Token.TCONS){
 			//get next token
@@ -603,61 +551,113 @@ public class Parser {
 			node.setLeft(arrdecl());
 			return node;
 		}
-
-		TreeNode check = decl();
-		if (check.getValue() == TreeNode.NARRD){
+		
+		// NSIMP or NARRP
+		TreeNode checkNode = decl();
+		if (checkNode.getValue() == TreeNode.NARRD){
 			node.setValue(TreeNode.NARRP);
-		}else if (check.getValue() == TreeNode.NSDECL){
+		}else if (checkNode.getValue() == TreeNode.NSDECL){
 			node.setValue(TreeNode.NSIMP);
 		}else{
 			return null;
 		}
-		node.setLeft(check);
+		node.setLeft(checkNode);
 		return node;
 	}
 	
 	
-	//
+	//<locals> ::= <dlist> | ε
 	private TreeNode locals(){
-		
-		return null;
+		if (currentToken.value() != Token.TIDEN)return null;
+
+		return dlist();
 	}
 	
 	// NDLIST
+	//<dlist> ::= <decl> <dlistb>
 	private TreeNode dlist(){
 		
-		return null;
+		TreeNode node = new TreeNode(TreeNode.NDLIST);
+
+		node.setLeft(decl());
+		node.setRight(dlistb());
+
+		return node;
 	}
 	
-	// 
+	// <dlistb> ::= , <dlist> | ε
 	private TreeNode dlistb(){
 		
-		return null;
+		if (currentToken.value() != Token.TCOMA) return null;
+
+		currentToken = followToken;
+		followToken = scanner.getToken();
+
+		return dlist();
 	}
 	
-	// <decl> ::= <id> : <declb>
+	// <decl> ::= <sdecl> | <arrdecl>
 	private TreeNode decl(){
-		
-		return null;
-	
+
+		TreeNode node = sdecl();
+
+
+		if (node == null){
+			node = arrdecl();
+			if (node == null) return null;
+		}
+		currentToken = followToken;
+		followToken = scanner.getToken();
+
+		return node;
 	}
 	
-	//<declb> ::= <stype> | <typeid>
-	private TreeNode declb(){
-		
-		return null;
-	}
-	
-	// 
-	private TreeNode stype(){
-		
-		return null;
-	}
 	
 	// NSTATS
 	private TreeNode stats(){
-		
-		return null;
+		String errMsg = "Invalid statements declaration.";
+		//First non-terminal values expectede
+		int first[] = {
+			Token.TREPT, Token.TIDEN, Token.TINPT, Token.TPRIN, Token.TPRLN, Token.TRETN, Token.TFOR, Token.TIFTH
+		};
+
+		TreeNode node = new TreeNode(TreeNode.NSTATS);
+		TreeNode temp;
+
+		//Check for next token to decide which non-terminal to enter
+		//Enter strstat node
+		if (currentToken.value() == Token.TFOR || currentToken.value() == Token.TIFTH){
+			temp = strstat();
+			//Check if next node is stats or empty string
+			for (int i = 0; i < first.length; i++){
+				if (currentToken.value() == first[i])
+				{
+					node.setLeft(temp);
+					node.setRight(stats());
+					return node;
+				}
+			}
+			return temp;
+		}
+		//Enter stat node
+		else{
+			temp = stat();
+			//Check for semicolon token
+			if (!checkToken(Token.TSEMI, errMsg + currentToken.getStr())) return null;
+			currentToken = followToken;
+			followToken = scanner.getToken();
+
+			//Check if next node is stats or empty string
+			for (int i = 0; i < first.length; i++){
+				if (currentToken.value() == first[i])
+				{
+					node.setLeft(temp);
+					node.setRight(stats());
+					return node;
+				}
+			}
+			return temp;
+		}
 	}
 	
 	// 
