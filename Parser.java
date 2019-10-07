@@ -9,7 +9,6 @@
 // Parser LL1
 //
 // TreeNode  Call is: TreeNode.printTree(outfile, rootOfTree);
-
 public class Parser {
 	private Scanner scanner;  // scan and get token
 	private Token currentToken; // Current Token
@@ -40,12 +39,10 @@ public class Parser {
 				//the undefined token TUNDF
 				System.out.println("=====Error(Lexical): " + currentToken.getStr());
 				errorList+="Error(Lexical): " + currentToken.getStr();// lexeme
-
 			}else{
 				// Syntax 
 				System.out.println("=====Error(Syntax): " + message);
 				errorList+="Error(Syntax): "+ message;
-
 			}
 			// location of the error in source code
 			errorList+=" [Line: "+ currentToken.getLn()// line
@@ -68,7 +65,6 @@ public class Parser {
 	private TreeNode program(){
 		
 		TreeNode node = new TreeNode(TreeNode.NUNDEF);
-
 		//need CD19 token		
 		if(!checkToken(Token.TCD19, "Not found the Keyword 'CD19'")) return node;
 		//get next token
@@ -77,7 +73,6 @@ public class Parser {
 		if(!checkToken(Token.TIDEN, "Invalid initialisation: Not found ID name.")) return node;
 		StRec stRec = new StRec();			
 		stRec.setName(currentToken.getStr());
-
 		//node.setType(stRec);
 		symbolTable.put(stRec.getName(), stRec);
 		
@@ -92,9 +87,7 @@ public class Parser {
 		node.setRight(mainbody());
 		
 		return node;
-
 	}
-
 	// NGLOB 
 	// <globals> ::= <consts> <types> <arrays>
 	private TreeNode globals(){
@@ -108,10 +101,8 @@ public class Parser {
 		if(currentToken.value() != Token.TCONS) return null;
 		//get next token
 		currentToken = scanner.getToken();		
-
 		return initlist();
 	}
-
 	// Special
 	//<initlist> ::= <init> <initlistb>
 	private TreeNode initlist(){
@@ -130,15 +121,12 @@ public class Parser {
 			return node;
 		}
 	}
-
 	// NINIT
 	//<init> ::= <id> = <expr>
 	private TreeNode init(){
 		TreeNode node = new TreeNode(TreeNode.NUNDEF);
-
 		//need TIDEN token
 		if(!checkToken(Token.TIDEN, "Invalid initialisation: Not found ID name.")) return node;
-
 		StRec stRec = new StRec();
 		stRec.setName(currentToken.getStr());
 		currentToken = scanner.getToken();		
@@ -178,7 +166,6 @@ public class Parser {
 		TreeNode node = new TreeNode(TreeNode.NFUNCS);
 		node.setLeft(func());
 		node.setRight(funcs());
-
 		return node;
 	}
 	
@@ -193,13 +180,11 @@ public class Parser {
 		currentToken = scanner.getToken();		
 		
 		node.setLeft(slist());
-
 		//need TBEGN token
 		if(!checkToken(Token.TBEGN, errMsg+"Keyword missing: Not found 'BEGIN'.")) return node;
 		currentToken = scanner.getToken();		
 		
 		node.setRight(stats());
-
 		//need TEND token
 		if(!checkToken(Token.TEND, errMsg+"Keyword missing: Not found 'END'.")) return node;
 		currentToken = scanner.getToken();		
@@ -220,7 +205,6 @@ public class Parser {
 		node.setValue(TreeNode.NMAIN);
 		return node;
 	}
-
 	
 	// NSDLST
 	//<slist> ::= <sdecl> <slistb>
@@ -254,12 +238,10 @@ public class Parser {
 		if(currentToken.value() != Token.TIDEN)return null;
 		return typelist();
 	}
-
 	// NRTYPE  NATYPE
 	//<type> ::= <structid> is <fields> end | <typeid> is array [ <expr> ] of <structid>
 	private TreeNode type(){
 		TreeNode node = new TreeNode(TreeNode.NUNDEF);
-
 		String errMsg="Invalid struct or array declaration: ";
 		
 		//need TIDEN token
@@ -269,14 +251,11 @@ public class Parser {
 		stRec.setName(currentToken.getStr());
 		currentToken = scanner.getToken();		
 
-
 		node.setSymbol(stRec);
-
 		// need TIS token
 		if(!checkToken(Token.TIS, errMsg+"Keyword missing: Not found 'IS'.")) return node;
 		currentToken = scanner.getToken();		
 		
-
 		//NRTYPE node or NATYPE node
 		if(currentToken.value() != Token.TARAY){
 			//NRTYPE
@@ -288,7 +267,6 @@ public class Parser {
 			//need TEND token
 			if(!checkToken(Token.TEND, errMsg+"Keyword missing: Not found 'END'.")) return node;
 			currentToken = scanner.getToken();			
-
 			return node;
 		}else{
 			//NATYPE
@@ -298,18 +276,14 @@ public class Parser {
 			symbolTable.put(stRec.getName(), stRec);
 			//need TLBRK token
 			if(!checkToken(Token.TLBRK, errMsg+"Not found '['.")) return node;
-			currentToken = scanner.getToken();			
-			
+			currentToken = scanner.getToken();
 			node.setLeft(expr());
-
 			//need TRBRK token
 			if(!checkToken(Token.TRBRK, errMsg+"Not found ']'.")) return node;
-			currentToken = scanner.getToken();			
-			
+			currentToken = scanner.getToken();	
 			//need TOF token
 			if(!checkToken(Token.TOF, errMsg+"Keyword missing: Not found 'OF'.")) return node;
-			currentToken = scanner.getToken();		
-			
+			currentToken = scanner.getToken();	
 			//need TIDEN token
 			if(!checkToken(Token.TIDEN, errMsg+"Not found StructID name.")) return node;
 			
@@ -320,11 +294,9 @@ public class Parser {
 			node.setType(stRec2);
 			symbolTable.put(stRec2.getName(), stRec2);	
 			
-			currentToken = scanner.getToken();			
-			
+			currentToken = scanner.getToken();
 			return node;
 		}		
-
 	}
 	
 	//<fields> ::= <sdecl> <fieldsb>
@@ -358,12 +330,10 @@ public class Parser {
 		stRec.setName(currentToken.getStr());
 		currentToken = scanner.getToken();		
 		
-
 		//need TCOLN token
 		if(!checkToken(Token.TCOLN, errMsg+"Not found ':'")) return node;
 		currentToken = scanner.getToken();		
 		
-
 		//Resolution type TINTG or TREAL or TBOOL token
 		//<stype> ::= integer | real | boolean
 		if(currentToken.value() == Token.TINTG){
@@ -377,11 +347,9 @@ public class Parser {
 		}
 		currentToken = scanner.getToken();		
 		
-
 		node.setSymbol(stRec);
 		symbolTable.put(stRec.getName(), stRec);
 		return node;		
-
 	}
 	
 	// NALIST
@@ -408,13 +376,11 @@ public class Parser {
 		String errMsg = "Invalid array declaration: ";
 		TreeNode node = new TreeNode(TreeNode.NARRD);
 		StRec stRec = new StRec();
-
 		//need TIDEN token
 		if(!checkToken(Token.TIDEN, errMsg+"Not found ID name.")) return node;
 		stRec.setName(currentToken.getStr());
 		currentToken = scanner.getToken();		
 		
-
 		//need TCOLN token
 		if(!checkToken(Token.TCOLN, errMsg+"Not found ':'.")) return node;
 		currentToken = scanner.getToken();		
@@ -425,10 +391,8 @@ public class Parser {
 		stRec.setType(currentToken.getStr());
 		currentToken = scanner.getToken();		
 		
-
 		node.setSymbol(stRec);
 		symbolTable.put(stRec.getName(), stRec);
-
 		return node;
 	}
 	
@@ -438,35 +402,28 @@ public class Parser {
 		String errMsg = "Invalid function declaration";
 		TreeNode node = new TreeNode(TreeNode.NFUND);
 		StRec stRec = new StRec();
-
 		//need TFUNC token
 		if(!checkToken(Token.TFUNC, errMsg+"Keyword missing: Not found 'FUNCTION'.")) return node;
 		currentToken = scanner.getToken();		
 		
-
 		//neeed TIDEN token
 		if(!checkToken(Token.TIDEN, errMsg+"Not found ID name.")) return node;
 		stRec.setName(currentToken.getStr());
 		currentToken = scanner.getToken();		
 		
-
 		//need TLPAR token
 		if(!checkToken(Token.TLPAR, errMsg+"Not found '('.")) return node;
 		currentToken = scanner.getToken();		
 		
-
 		node.setLeft(plist());
-
 		//need TRPAR token
 		if(!checkToken(Token.TRPAR, errMsg+"Not found ')'.")) return node;
 		currentToken = scanner.getToken();		
 		
-
 		//need TCOLN token
 		if(!checkToken(Token.TCOLN, errMsg+"Not found ':'.")) return node;
 		currentToken = scanner.getToken();		
 		
-
 		//Resolution type TINTG or TREAL or TBOOL token
 		//<rtype> ::= integer | real | boolean | void
 		if(currentToken.value() == Token.TINTG){
@@ -482,28 +439,21 @@ public class Parser {
 		}
 		currentToken = scanner.getToken();		
 		
-
 		node.setMiddle(locals());
-
 		//need TBEGN token
 		if(!checkToken(Token.TBEGN, errMsg+"Keyword missing: Not found 'BEGIN'.")) return node;
 		currentToken = scanner.getToken();		
 		
-
 		node.setRight(stats());
-
 		//need TEND token
 		if(!checkToken(Token.TEND, errMsg+"Keyword missing: Not found 'END'.")) return node;
 		currentToken = scanner.getToken();		
 		
-
 		node.setSymbol(stRec);
 		symbolTable.put(stRec.getName(), stRec);
-
 		return node;
 	}
 	
-
 	// <plist> ::= <params> | ε
 	private TreeNode plist(){
 		if(currentToken.value() == Token.TIDEN || currentToken.value() == Token.TCONS){
@@ -530,7 +480,6 @@ public class Parser {
 			return node;
 		}
 	}
-
 	
 	// NSIMP NARRP NARRC
 	//<param> ::= <decl> | const <arrdecl>
@@ -538,9 +487,7 @@ public class Parser {
 		TreeNode node = new TreeNode(TreeNode.NUNDEF);
 		if(currentToken.value() == Token.TCONS){
 			//get next token
-			currentToken = scanner.getToken();			
-			
-
+			currentToken = scanner.getToken();
 			node.setValue(TreeNode.NARRC);
 			node.setLeft(arrdecl());
 			return node;
@@ -566,7 +513,6 @@ public class Parser {
 		return dlist();
 	}
 	
-
 	//<dlist> ::= <decl> <dlistb>
 	private TreeNode dlist(){
 		TreeNode node = decl();
@@ -587,28 +533,23 @@ public class Parser {
 	
 	// <decl> ::= <sdecl> | <arrdecl>
 	private TreeNode decl(){
-
 		TreeNode node = sdecl();
-
 		if(node == null){
 			node = arrdecl();
 			if(node == null) return null;
 		}
 		currentToken = scanner.getToken();		
 		
-
 		return node;
 	}
 	
 	//Special 
 	//<stats> ::= <stat> ; <statsb> | <strstat> <statsb> 
-
 	private TreeNode stats(){
 		// <stat> or <strstat>  
 		if(currentToken.value() == Token.TFOR || currentToken.value() == Token.TIFTH){
 			TreeNode node = strstat();
 			return statsb(node);
-
 		}else{
 			TreeNode node = stat();
 			//need TSEMI token
@@ -650,7 +591,6 @@ public class Parser {
 	
 	// <stat> ::= <repstat> | <returnstat> | <iostat> | <id> <statb>
 	private TreeNode stat(){
-
 		//Lookahead for next non terminal
 		if(currentToken.value() == Token.TREPT){
 			return repstat();
@@ -661,10 +601,8 @@ public class Parser {
 		}else{
 		
 			return statb();
-
 		}
 	}
-
 	//<statb> ::= <asgnstat> | <callstat> 
 	private TreeNode statb(){
 		//need TIDEN token
@@ -685,29 +623,21 @@ public class Parser {
 		//need TFOR token
 		if(!checkToken(Token.TFOR, errMsg+"Keyword missing: Not found 'FOR'.")) return node;
 		currentToken = scanner.getToken();		
-
 		//need TLPAR token
 		if(!checkToken(Token.TLPAR, errMsg+"Not found '('.")) return node;
 		currentToken = scanner.getToken();		
-
 		node.setLeft(asgnlist());
-
 		//need TSEMI token
 		if(!checkToken(Token.TSEMI, errMsg+"Not found ';'.")) return node;
 		currentToken = scanner.getToken();		
-
 		node.setMiddle(bool());
-
 		//Cneed TRPAR token
 		if(!checkToken(Token.TRPAR, errMsg+"Not found ')'.")) return node;
 		currentToken = scanner.getToken();		
-
 		node.setRight(stats());
-
 		//need TEND token
 		if(!checkToken(Token.TEND, errMsg+"Keyword missing: Not found 'END'.")) return node;
 		currentToken = scanner.getToken();		
-
 		return node;
 	}
 	
@@ -716,29 +646,21 @@ public class Parser {
 	private TreeNode repstat(){
 		String errMsg = "Invalid repeat structure: ";
 		TreeNode node = new TreeNode(TreeNode.NREPT);
-
 		//need TREPT token
 		if(!checkToken(Token.TREPT, errMsg+"Keyword missing: Not found 'REPEAT'.")) return node;
 		currentToken = scanner.getToken();		
-
 		//need TLPAR token
 		if(!checkToken(Token.TLPAR, errMsg+"Not found '('.")) return node;
 		currentToken = scanner.getToken();		
-
 		node.setLeft(asgnlist());
-
 		//need TRPAR token
 		if(!checkToken(Token.TRPAR, errMsg+"Not found ')'.")) return node;
 		currentToken = scanner.getToken();		
-
 		node.setMiddle(stats());
-
 		//need TUNTL token
 		if(!checkToken(Token.TUNTL, errMsg+"Keyword missing: Not found 'UNTIL'.")) return node;
 		currentToken = scanner.getToken();		
-
 		node.setRight(bool());
-
 		return node;
 	}
 	
@@ -752,10 +674,8 @@ public class Parser {
 	//<alist> ::= <id> <asgnstat> <alistb>
 	private TreeNode alist(){
 		TreeNode node = new TreeNode(TreeNode.NASGNS);
-
 		node.setLeft(asgnstat());
 		node.setRight(alistb());
-
 		return node;
 	}
 	
@@ -763,7 +683,6 @@ public class Parser {
 	private TreeNode alistb(){
 		
 		if(currentToken.value() != Token.TCOMA)	return null;
-
 		//get next token
 		currentToken = scanner.getToken();		
 		
@@ -772,86 +691,59 @@ public class Parser {
 	
 	// <asgnstat> ::= <var> <asgnop> <bool>
 	private TreeNode asgnstat(){
-		TreeNode node = new TreeNode(TreeNode.NASGNS);
-
+		TreeNode node = new TreeNode(TreeNode.NUNDEF);
 		node.setLeft(var());
-		node.setMiddle(asgnop());
-		node.setRight(bool());
-
-		return node;
-	}
-	
-	// <asgnop> ::= = | += | -= | *= | /= // NASGN, NPLEQ, NMNEQ, NSTEQ, NDVEQ
-	private TreeNode asgnop(){
-		TreeNode node  = new TreeNode(TreeNode.NUNDEF);
-
+		// <asgnop> ::= = | += | -= | *= | /= // NASGN, NPLEQ, NMNEQ, NSTEQ, NDVEQ
 		if(currentToken.value() == Token.TEQUL){
-			currentToken = scanner.getToken();			
-			
 			node.setValue(TreeNode.NASGN);
-		}
-		else if(currentToken.value() == Token.TPLEQ){
-			currentToken = scanner.getToken();			
-			
+			currentToken = scanner.getToken();
+		}else if(currentToken.value() == Token.TPLEQ){
 			node.setValue(TreeNode.NPLEQ);
-		}
-		else if(currentToken.value() == Token.TMNEQ){
-			currentToken = scanner.getToken();			
-			
+			currentToken = scanner.getToken();
+		}else if(currentToken.value() == Token.TMNEQ){
 			node.setValue(TreeNode.NMNEQ);
-		}
-		else if(currentToken.value() == Token.TSTEQ){
-			currentToken = scanner.getToken();			
-			
+			currentToken = scanner.getToken();
+		}else if(currentToken.value() == Token.TSTEQ){
 			node.setValue(TreeNode.NSTEQ);
-		}
-		else if(currentToken.value() == Token.TDVEQ){
-			currentToken = scanner.getToken();			
-			
+			currentToken = scanner.getToken();
+		}else if(currentToken.value() == Token.TDVEQ){
 			node.setValue(TreeNode.NDVEQ);
-		}
-		else{
+			currentToken = scanner.getToken();
+		}else{
 			checkToken(Token.TEQUL, "Invalid assignment: Not found assignment operator.");
-			return null;
 		}
+		node.setRight(bool());
 		return node;
 	}
-		
-	// NIFTH NIFTE
-	//<ifstat> ::= if ( <bool> ) <stats> end 
-	//<ifstat> ::= if ( <bool> ) <stats>  else <stats> end
+
+		//????
+	//Special  <ifstat> ::= if ( <bool> ) <stats> <ifstatb>
+	//NIFTH NIFTE <ifstatb> ::= end | else <stats> end
+// if end return node?
+// if else return new node?
 	private TreeNode ifstat(){
 		String errMsg = "Invalid if statement: ";
-
 		TreeNode node = new TreeNode(TreeNode.NUNDEF);
 		//need TIFTH token
 		if(!checkToken(Token.TIFTH, errMsg+"Keyword missing: Not found 'IF'")) return node;
 		currentToken = scanner.getToken();		
-
 		//need TLPAR token
 		if(!checkToken(Token.TLPAR, errMsg+"Not found '('")) return node;
 		currentToken = scanner.getToken();		
-
 		node.setLeft(bool());
-
 		//need TRPAR token
 		if(!checkToken(Token.TRPAR, errMsg+"Not found ')'")) return node;
 		currentToken = scanner.getToken();		
 
-
 		node.setMiddle(stats());
-
 
 		//NIFTH or NIFTE
 		if(currentToken.value() == Token.TELSE){
 			currentToken = scanner.getToken();			
-
 			node.setRight(stats());
-
 			//need TEND token
 			if(!checkToken(Token.TEND, errMsg+"Keyword missing: Not found 'END'")) return node;
 			currentToken = scanner.getToken();			
-
 			node.setValue(TreeNode.NIFTE);
 			return node;
 		}
@@ -861,16 +753,12 @@ public class Parser {
 		currentToken = scanner.getToken();		
 		node.setValue(TreeNode.NIFTH);
 		return node;
-
 		
 	}
-
 	
 	// NINPUT  NPRINT  NPRLN
 	private TreeNode iostat(){
-
 		TreeNode node = new TreeNode(TreeNode.NUNDEF);
-
 		if(currentToken.value() == Token.TINPT){
 			currentToken = scanner.getToken();			
 			node.setValue(TreeNode.NINPUT);
@@ -885,7 +773,6 @@ public class Parser {
 			node.setLeft(prlist());
 		}else{
 			checkToken(Token.TINPT, "Invalid I/O statement.");
-			return null;
 		}
 		return node;
 	}
@@ -897,16 +784,13 @@ public class Parser {
 		String errMsg = "Invalid call statement: ";
 		TreeNode node = new TreeNode(TreeNode.NCALL);
 		StRec stRec = new StRec();
-
 		//need TIDEN token
 		if(!checkToken(Token.TIDEN, errMsg+"Not found ID name.")) return node;
 		stRec.setName(currentToken.getStr());
 		currentToken = scanner.getToken();		
-
 		//need TLPAR token
 		if(!checkToken(Token.TLPAR, errMsg+"Not found '('.")) return node;
 		currentToken = scanner.getToken();		
-
 		if(currentToken.value() == Token.TRPAR){
 			//get next token
 			currentToken = scanner.getToken();			
@@ -916,7 +800,6 @@ public class Parser {
 			if(!checkToken(Token.TRPAR, errMsg+"Not found ')'.")) return node;
 			currentToken = scanner.getToken();			
 		}
-
 		node.setSymbol(stRec);
 		symbolTable.put(stRec.getName(), stRec);
 		return node;
@@ -924,11 +807,8 @@ public class Parser {
 	
 	// NRETN
 	//<returnstat> ::= return <returnstatb>
-
 	private TreeNode returnstat(){
-
 		TreeNode node = new TreeNode(TreeNode.NRETN);
-
 		//need TRETN token
 		if(!checkToken(Token.TRETN, "Invalid return statement.")) return node;
 		currentToken = scanner.getToken();		
@@ -949,23 +829,21 @@ public class Parser {
 			return null;
 		}
 	}
-	
-// Special				
-// <vlist> ::= <id> <var> <vlistb>
+	//???
+	// Special				
+	// <vlist> ::= <id> <var> <vlistb>
 	private TreeNode vlist(){
 		if (currentToken.value() == Token.TIDEN)
 		TreeNode node = new TreeNode(TreeNode.NVLIST);
-
 		node.setLeft(var());
 		node.setRight(vlistb());
-
 		return node;
 	}
-	
-// NVLIST				
-// <vlistb> ::= , <vlist> | ε
-	private TreeNode vlistb(){
-
+????????	
+	//???
+	// NVLIST				
+	// <vlistb> ::= , <vlist> | ε
+	private TreeNode vlistb(TreeNode node){
 		if(currentToken.value() != Token.TCOMA)	return null;
 		//get next Token
 		currentToken = scanner.getToken();		
@@ -973,41 +851,31 @@ public class Parser {
 	}
 	
 	// NSIMV  NARRV
-	//<var> ::= <id> | <id> [<expr>] . <id>
-	private TreeNode var(){
-		String errMsg = "Invalid variable declaration.";
-		//if(!checkToken(Token.TIDEN, errMsg+"  ")) return null;
-		StRec stRec = new StRec(currentToken.getStr());
-		//currentToken = scanner.getToken();		
-		
+	//<var> ::= ε | [<expr>] . <id>
+	private TreeNode var(StRec stRec){
+		String errMsg = "Invalid variable declaration: ";
 
 		// NSIMV or NARRV
 		if(currentToken.value() == Token.TLBRK){
 			TreeNode node = new TreeNode(TreeNode.NARRV);
 			//get next token
-			currentToken = scanner.getToken();			
-			
+			currentToken = scanner.getToken();
+			node.setSymbol(stRec);
+			symbolTable.put(stRec.getName(), stRec);
 			node.setLeft(expr());
-
 			//need TRBRK token 
-			if(!checkToken(Token.TRBRK, errMsg+"")) return node;
-			currentToken = scanner.getToken();			
-			
-
+			if(!checkToken(Token.TRBRK, errMsg+"Not found ']'.")) return node;
+			currentToken = scanner.getToken();
 			//need TDOT token
-			if(!checkToken(Token.TDOT, errMsg+"")) return node;
-			currentToken = scanner.getToken();			
-			
-
+			if(!checkToken(Token.TDOT, errMsg+"Not found '.'.")) return node;
+			currentToken = scanner.getToken();
 			//need TIDEN token 
-			if(!checkToken(Token.TIDEN, errMsg+"")) return node;
+			if(!checkToken(Token.TIDEN, errMsg+".")) return node;
 			StRec stRec2 = new StRec(currentToken.getStr());
-			currentToken = scanner.getToken();			
-			
-
-			node.setSymbol(stRec2);
+			currentToken = scanner.getToken();
+			//????
+			node.setType(stRec2);//???????????
 			symbolTable.put(stRec.getName(), stRec2);
-
 			return node;
 		}else{
 			TreeNode node = new TreeNode(TreeNode.NSIMV);
@@ -1017,7 +885,6 @@ public class Parser {
 		}
 	}
 	
-
 	//<elist> ::= <bool> <elistb>
 	private TreeNode elist(){
 		TreeNode node = bool();
@@ -1035,8 +902,7 @@ public class Parser {
 			return node;
 		}
 	}
-
-	// NBOOL
+//????
 	//<bool> ::=  <rel> <boolb> 
 	private TreeNode bool(){
 		TreeNode node = new TreeNode(TreeNode.NBOOL);
@@ -1044,15 +910,13 @@ public class Parser {
 		node.setRight(boolb());		
 		return node;
 	}
-
+	// NBOOL
 	// <boolb> ::= <logop> <rel> <boolb> | ε
 	private TreeNode boolb(){
-
 		TreeNode node = new TreeNode(TreeNode.NBOOL);
 		if(currentToken.value() == Token.TAND 
 			|| currentToken.value() == Token.TOR 
 			|| currentToken.value() == Token.TXOR){
-
 			node.setLeft(logop());
 			node.setMiddle(rel());
 			node.setRight(boolb());
@@ -1061,7 +925,7 @@ public class Parser {
 		return null;
 		
 	}
-	
+//???????	
 	// NNOT
 	//<rel> ::= not <expr> <relop> <expr> | <expr> <relb> 
 	private TreeNode rel(){
@@ -1069,13 +933,10 @@ public class Parser {
 		if(currentToken.value() == Token.TNOT){
 			node.setValue(TreeNode.NNOT);
 			//get next Token
-			currentToken = scanner.getToken();			
-			
-
+			currentToken = scanner.getToken();
 			node.setLeft(expr());
 			node.setMiddle(relop());
 			node.setRight(expr());
-
 			return node;
 		}
 		node.setLeft(expr());
@@ -1103,27 +964,19 @@ public class Parser {
 	// NAND, NOR, NXOR
 	// <logop> ::= and | or | xor     
 	private TreeNode logop(){
-
 		TreeNode node  = new TreeNode(TreeNode.NUNDEF);
-
 		if(currentToken.value() == Token.TAND){
 			currentToken = scanner.getToken();			
-			
 			node.setValue(TreeNode.NAND);
-		}
-		else if(currentToken.value() == Token.TOR){
+		}else if(currentToken.value() == Token.TOR){
 			currentToken = scanner.getToken();			
-			
 			node.setValue(TreeNode.NOR);
-		}
-		else if(currentToken.value() == Token.TXOR){
+		}else if(currentToken.value() == Token.TXOR){
 			currentToken = scanner.getToken();			
-			
 			node.setValue(TreeNode.NXOR);
-		}
-		else{
+		}else{
 			checkToken(Token.TAND, "Invalid logic operation.");
-			return null;
+			return node;
 		}
 		return node;
 	}
@@ -1131,78 +984,58 @@ public class Parser {
 	// NEQL, NNEQ, NGRT, NLEQ, NLSS, NGEQ
 	// <relop> ::= == | != | > | <= | < | >=
 	private TreeNode relop(){
-
 		TreeNode node  = new TreeNode(TreeNode.NUNDEF);
-
 		if(currentToken.value() == Token.TEQEQ){
-			currentToken = scanner.getToken();			
-			
+			currentToken = scanner.getToken();
 			node.setValue(TreeNode.NEQL);
 		}
 		else if(currentToken.value() == Token.TNEQL){
-			currentToken = scanner.getToken();			
-			
+			currentToken = scanner.getToken();
 			node.setValue(TreeNode.NNEQ);
 		}
 		else if(currentToken.value() == Token.TGRTR){
-			currentToken = scanner.getToken();			
-			
+			currentToken = scanner.getToken();
 			node.setValue(TreeNode.NGRT);
 		}
 		else if(currentToken.value() == Token.TLEQL){
-			currentToken = scanner.getToken();			
-			
+			currentToken = scanner.getToken();
 			node.setValue(TreeNode.NLEQ);
 		}
 		else if(currentToken.value() == Token.TLESS){
-			currentToken = scanner.getToken();			
-			
+			currentToken = scanner.getToken();
 			node.setValue(TreeNode.NLSS);
 		}
 		else if(currentToken.value() == Token.TGEQL){
-			currentToken = scanner.getToken();			
-			
+			currentToken = scanner.getToken();
 			node.setValue(TreeNode.NGEQ);
 		}
 		else{
 			checkToken(Token.TEQEQ, "Invalid logic operation.");
-			return null;
+			return node;
 		}
 		return node;
 	}
-	
-//////////////////////////////////////////////////////////////////////////	
-//////////////////////////////////////////////////////////////////////////	
-//////////////////////////////////////////////////////////////////////////	
-//////////////////////////////////////////////////////////////////////////	
 	// plus-minus method
 	// <expr> ::= <term> <exprb>
 	private TreeNode expr(){
-		TreeNode tempNode;
-		tempNode = term();
-		return exprb(tempNode);
+		TreeNode node = term();
+		return exprb(node);
 	}
 	
 	// NADD  NSUB
 	//<exprb> ::= + <term> <exprb> | - <term> <exprb> | ε
-	private TreeNode exprb(TreeNode leftNode){
+	private TreeNode exprb(TreeNode node){
 		TreeNode parent;
 		if(currentToken.value() == Token.TPLUS){
-			currentToken = scanner.getToken();			
-			
-			parent = new TreeNode(TreeNode.NADD);
-			parent.setLeft(leftNode);
-			parent.setRight(term());
+			currentToken = scanner.getToken();
+			parent = new TreeNode(TreeNode.NADD,node,term());
 			return(exprb(parent));
 		}else if(currentToken.value() == Token.TMINS){
-			currentToken = scanner.getToken();			
-			
-			parent = new TreeNode(TreeNode.NSUB);
-			parent.setLeft(leftNode);
-			parent.setRight(term());
+			currentToken = scanner.getToken();
+			parent = new TreeNode(TreeNode.NSUB,node,term());
 			return(exprb(parent));
 		}else{
-			return leftNode;
+			return node;
 		}
 		
 	}
@@ -1210,79 +1043,70 @@ public class Parser {
 	// multiply operation
 	//<term> ::= <fact> <termb>
 	private TreeNode term(){
-		TreeNode tempNode;
-		tempNode = fact();
-		return termb(tempNode);
+		TreeNode node = fact();
+		return termb(node);
 	}
 	
 	// NMUL, NDIV, NMOD
 	//<termb> ::= * <fact> <termb> | / <fact> <termb> | % <fact> <termb> | ε
-	private TreeNode termb(TreeNode leftNode){
+	private TreeNode termb(TreeNode node){
 		TreeNode parent;
 		if(currentToken.value() == Token.TSTAR){
-			currentToken = scanner.getToken();			
-			
+			currentToken = scanner.getToken();
 			parent = new TreeNode(TreeNode.NMUL);
-			parent.setLeft(leftNode);
+			parent.setLeft(node);
 			parent.setRight(fact());
 			return(termb(parent));
 		}else if(currentToken.value() == Token.TDIVD){
-			currentToken = scanner.getToken();			
-			
+			currentToken = scanner.getToken();
 			parent = new TreeNode(TreeNode.NDIV);
-			parent.setLeft(leftNode);
+			parent.setLeft(node);
 			parent.setRight(fact());
 			return(termb(parent));
 		}else if(currentToken.value() == Token.TPERC){
-			currentToken = scanner.getToken();			
-			
+			currentToken = scanner.getToken();
 			parent = new TreeNode(TreeNode.NMOD);
-			parent.setLeft(leftNode);
+			parent.setLeft(node);
 			parent.setRight(fact());
 			return(termb(parent));
 		}else{
-			return leftNode;
+			return node;
 		}
 	}
 	
 	// exponential operation
 	//<fact> ::=  <exponent> <factb> 
 	private TreeNode fact(){
-		TreeNode tempNode;
-		tempNode = exponent();
-		return factb(tempNode);
+		TreeNode node = exponent();
+		return factb(node);
 	}
 	
 	// NPOW 
 	//<factb> ::=  ^ <exponent> <factb> | ε
-	private TreeNode factb(TreeNode leftNode){
+	private TreeNode factb(TreeNode node){
 		TreeNode parent;
 		if(currentToken.value() == Token.TCART){
-			currentToken = scanner.getToken();			
-			
+			currentToken = scanner.getToken();
 			parent = new TreeNode(TreeNode.NPOW);
-			parent.setLeft(leftNode);
+			parent.setLeft(node);
 			parent.setRight(exponent());
 			return(factb(parent));
 		}else{
-			return leftNode;
+			return node;
 		}
 	}
-	
-	// NILIT,  NFLIT,  NTRUE,  NFALS
-	//<exponent> ::= <var>| <fncall> | <intlit> | <reallit>  | true | false | ( <bool> )
-	//<exponent> ::= <exponentb> |  <intlit> | <reallit>  | true | false | ( <bool> )
-	//<exponentb> ::= <var>| <fncall> 
-	private TreeNode exponent(){
 
+	// NILIT,  NFLIT,  NTRUE,  NFALS
+	//<exponent> ::= <intlit> | <reallit> | true | false | <id> <exponentb> | ( <bool> )  
+
+	private TreeNode exponent(){
 		TreeNode node = new TreeNode(TreeNode.NUNDEF);
 		StRec stRec = new StRec();
 		if(currentToken.value() == Token.TILIT){
 			node.setValue(TreeNode.NILIT);
 			stRec.setName(currentToken.getStr());
 			//get next token
-			currentToken = scanner.getToken();			
-			
+			currentToken = scanner.getToken();
 			node.setSymbol(stRec);
 			symbolTable.put(stRec.getName(), stRec);
 			return node;
@@ -1290,24 +1114,15 @@ public class Parser {
 			node.setValue(TreeNode.NFLIT);
 			stRec.setName(currentToken.getStr());
 			//get next token
-			currentToken = scanner.getToken();			
-			
+			currentToken = scanner.getToken();
 			node.setSymbol(stRec);
 			symbolTable.put(stRec.getName(), stRec);
 			return node;
-		}else if(currentToken.value() == Token.TIDEN){
-			// if(followToken.value() == Token.TLPAR){
-				return fncall();
-			// }else{
-				// return var();
-			// }
-			
 		}else if(currentToken.value() == Token.TTRUE){
 			node.setValue(TreeNode.NTRUE);
 			stRec.setName(currentToken.getStr());
 			//get next token
-			currentToken = scanner.getToken();			
-			
+			currentToken = scanner.getToken();
 			node.setSymbol(stRec);
 			symbolTable.put(stRec.getName(), stRec);
 			return node;
@@ -1315,53 +1130,48 @@ public class Parser {
 			node.setValue(TreeNode.NFALS);
 			stRec.setName(currentToken.getStr());
 			//get next token
-			currentToken = scanner.getToken();			
-			
+			currentToken = scanner.getToken();
 			node.setSymbol(stRec);
 			symbolTable.put(stRec.getName(), stRec);
 			return node;
+		}else if(currentToken.value() == Token.TIDEN){
+			return exponentb();	
 		}else{
-
 			//need TLPAR token
 			if(!checkToken(Token.TLPAR, "Invalid exponent operation: Not found '('. ")) return node;
-			currentToken = scanner.getToken();			
-			
-
-			TreeNode tempNode;
-			tempNode = bool();
-
+			currentToken = scanner.getToken();
+			TreeNode tempNode = bool();
 			//need TRPAR token
 			if(!checkToken(Token.TRPAR, "Invalid exponent operation: Not found ')'. ")) return node;
-			currentToken = scanner.getToken();			
-			
-
+			currentToken = scanner.getToken();
 			return tempNode;
 		}
 	}
+	//<exponentb> ::= <var> | <fncall> 
+	private TreeNode exponentb(){
+		
+		//ID token
+		StRec stRec = new StRec();
+		stRec.setName(currentToken.getStr());
+		currentToken = scanner.getToken();	
+		if (currentToken.value() == Token.TLPAR){
+			return fncall(stRec);
+		}else{
+			return var(stRec);
+		}
 
-	////////////////////////////////////////////////
-	////////////////////////////////////////////////
-	////////////////////////////////////////////////
+		
+	}
+
 	// NFCALL
-	//<fncall> ::= <id> ( <fncallb> )
-	private TreeNode fncall(){
+	//<fncall> ::= ( <fncallb> 
+	private TreeNode fncall(StRec stRec){
 		String errMsg = "Invalid function call: ";
 		TreeNode node = new TreeNode(TreeNode.NFCALL);
-		StRec stRec = new StRec();
-
-		//need TIDEN token
-		if(!checkToken(Token.TIDEN, errMsg+"Not found ID name.")) return node;
-		stRec.setName(currentToken.getStr());
-		currentToken = scanner.getToken();		
-		
-
-		//need TLPAR token
-		if(!checkToken(Token.TLPAR, errMsg+"Not found '('. ")) return node;
 		currentToken = scanner.getToken();		
 		
 		
 		node.setLeft(fncallb());
-
 		//Check for right paranthesis token
 		if(!checkToken(Token.TRPAR, errMsg+"Not found ')'.")) return node;
 		currentToken = scanner.getToken();		
@@ -1371,7 +1181,7 @@ public class Parser {
 		return node;
 	}
 	
-	// <fncallb> ::= <elist> | ε
+	// <fncallb> ::= <elist> ) | )
 	private TreeNode fncallb(){
 		
 		if(currentToken.value() != Token.TRPAR){
@@ -1382,7 +1192,6 @@ public class Parser {
 		
 	}
 	
-
 	//<prlist> ::= <printitem> <prlistb>
 	private TreeNode prlist(){
 		TreeNode node = printitem();
@@ -1400,7 +1209,6 @@ public class Parser {
 			return node;
 		}
 	}
-
 	
 	// NSTRG
 	//<printitem> ::= <expr> | <string>
@@ -1409,8 +1217,7 @@ public class Parser {
 			TreeNode node = new TreeNode(TreeNode.NSTRG);
 			StRec stRec = new StRec(currentToken.getStr());
 			//get next token
-			currentToken = scanner.getToken();			
-			
+			currentToken = scanner.getToken();
 			node.setSymbol(stRec);
 			symbolTable.put(stRec.getName(), stRec);
 			return node;
@@ -1418,6 +1225,5 @@ public class Parser {
 		return expr();
 		
 	}
-
 
 }
