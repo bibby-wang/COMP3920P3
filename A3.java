@@ -44,7 +44,7 @@ public class A3{
 				
 				PrintWriter outFile= new PrintWriter(new FileWriter("_parser_"+args[i]));
 				
-				TreeNode.printTree(outFile, parser.program());
+				TreeNode.printTree(outFile, parser.getSyntaxTree());
 				System.out.println(parser.getErrorList());
 				outFile.close();
 				

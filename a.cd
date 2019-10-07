@@ -1,0 +1,9 @@
+CD19 ExampleAST
+main
+i:integer, j:integer, k:integer
+begin
+input i;
+input j;
+k = i + j;
+printline k;
+end CD19 ExampleAST
