@@ -45,6 +45,7 @@ public class A3{
 				PrintWriter outFile= new PrintWriter(new FileWriter("_parser_"+args[i]));
 				
 				TreeNode.printTree(outFile, parser.program());
+				System.out.println(parser.getErrorList());
 				outFile.close();
 				
 				// System.out.println("\r\n Tokens count is: "+countToken);

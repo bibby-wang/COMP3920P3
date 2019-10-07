@@ -18,8 +18,8 @@ public class SymbolTable{
 		this.prev = prev;
 	}
 
-	public void put(String str, StRec sym){
-		table.put(str, sym);
+	public void put(String str, StRec symbol){
+		table.put(str, symbol);
 	}
 
 	public StRec get(String str){

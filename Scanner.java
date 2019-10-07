@@ -319,6 +319,7 @@ public class Scanner{
 	// output to screen
 	public void printToken(Token tempToken){
 		Token sToken;
+		//TUNDF token Undefined
 		if (tempToken.value()==62){
 			
 			System.out.println("");
@@ -326,7 +327,7 @@ public class Scanner{
 			System.out.println("lexical error "+tempToken.getStr());
 			printCount=0;
 		}else{
-			
+			// TSTRG token the String
 			if(tempToken.value()==61){
 				// add "" in string
 				String tokenStr='"'+tempToken.getStr()+'"';
@@ -337,9 +338,6 @@ public class Scanner{
 				sToken=tempToken;
 			}
 
-			// System.out.println("==one="+sToken.shortString().length());
-			// System.out.println("==size="+printCount);
-			
 			if (printCount>60){
 				System.out.println("");
 				// System.out.println("-----1-----2-----3-----4-----5-----6-----7-----8-----9-----10");
@@ -377,12 +375,13 @@ public class Scanner{
 			
 		}
 		return 62; // TUNDF Undefined
-	}	
+	}
+	
+	// Couple Symbol
 	// token nark of the Delimiters and Operators
 	// <= >= != == += -= *= /=
 	private int getCoupleSymbolMark(String symbol) {
 		switch(symbol) {
-
 			case "<=": return 47; // TLEQL
 			case ">=": return 48; // TGEQL
 			case "!=": return 49; // TNEQL
@@ -392,7 +391,6 @@ public class Scanner{
 			case "*=": return 53; // TSTEQ
 			case "/=": return 54; // TDVEQ
 			// case "%=": return 55; // TPCEQ // useless
-			
 		}
 		return -1;
 	}	
@@ -418,102 +416,102 @@ public class Scanner{
 
 		switch(num){
 			// all used ASCII code 
-			case 9  : return 0;	  // tab
-			case 32 : return 0;   // (space)
-			case 33 : return 1;   // !
-			case 34 : return 1;   // "
-			case 35 : return -1;  // #
-			case 36 : return -1;  // $
-			case 37 : return 1;   // %
-			case 38 : return -1;  // &
-			case 39 : return -1;  // '
-			case 40 : return 1;  // (
-			case 41 : return 1;  // )
-			case 42 : return 1;  // *
-			case 43 : return 1;  // +
-			case 44 : return 1;  // ,
-			case 45 : return 1;  // -
-			case 46 : return 1;  // .
-			case 47 : return 1;  // /
-			case 48 : return 2;  // 0
-			case 49 : return 2;  // 1
-			case 50 : return 2;  // 2
-			case 51 : return 2;  // 3
-			case 52 : return 2;  // 4
-			case 53 : return 2;  // 5
-			case 54 : return 2;  // 6
-			case 55 : return 2;  // 7
-			case 56 : return 2;  // 8
-			case 57 : return 2;  // 9
-			case 58 : return 1;  // :
-			case 59 : return 1;  // ;
-			case 60 : return 1;  // <
-			case 61 : return 1;  // =
-			case 62 : return 1;  // >
-			case 63 : return -1;  // ?
-			case 64 : return -1;  // @
-			case 65 : return 3;  // A
-			case 66 : return 3;  // B
-			case 67 : return 3;  // C
-			case 68 : return 3;  // D
-			case 69 : return 3;  // E
-			case 70 : return 3;  // F
-			case 71 : return 3;  // G
-			case 72 : return 3;  // H
-			case 73 : return 3;  // I
-			case 74 : return 3;  // J
-			case 75 : return 3;  // K
-			case 76 : return 3;  // L
-			case 77 : return 3;  // M
-			case 78 : return 3;  // N
-			case 79 : return 3;  // O
-			case 80 : return 3;  // P
-			case 81 : return 3;  // Q
-			case 82 : return 3;  // R
-			case 83 : return 3;  // S
-			case 84 : return 3;  // T
-			case 85 : return 3;  // U
-			case 86 : return 3;  // V
-			case 87 : return 3;  // W
-			case 88 : return 3;  // X
-			case 89 : return 3;  // Y
-			case 90 : return 3;  // Z
-			case 91 : return 1;  // [
-			case 92 : return -1;  // "\" 
-			case 93 : return 1;  // ]
-			case 94 : return 1;  // ^
-			case 95 : return -1;  // _
-			case 96 : return -1;  // `
-			case 97 : return 3;  // a
-			case 98 : return 3;  // b
-			case 99 : return 3;  // c
-			case 100 : return 3;  // d
-			case 101 : return 3;  // e
-			case 102 : return 3;  // f
-			case 103 : return 3;  // g
-			case 104 : return 3;  // h
-			case 105 : return 3;  // i
-			case 106 : return 3;  // j
-			case 107 : return 3;  // k
-			case 108 : return 3;  // l
-			case 109 : return 3;  // m
-			case 110 : return 3;  // n
-			case 111 : return 3;  // o
-			case 112 : return 3;  // p
-			case 113 : return 3;  // q
-			case 114 : return 3;  // r
-			case 115 : return 3;  // s
-			case 116 : return 3;  // t
-			case 117 : return 3;  // u
-			case 118 : return 3;  // v
-			case 119 : return 3;  // w
-			case 120 : return 3;  // x
-			case 121 : return 3;  // y
-			case 122 : return 3;  // z
-			case 123 : return -1;  // {
-			case 124 : return -1;  // |
-			case 125 : return -1;  // }
-			case 126 : return -1;  // ~
+			case 9  : return 0;	    // tab
+			case 32 : return 0;     // (space)
+			case 33 : return 1;     // !
+			case 34 : return 1;     // "
+			case 35 : return -1;    // #
+			case 36 : return -1;    // $
+			case 37 : return 1;     // %
+			case 38 : return -1;    // &
+			case 39 : return -1;    // '
+			case 40 : return 1;     // (
+			case 41 : return 1;     // )
+			case 42 : return 1;     // *
+			case 43 : return 1;     // +
+			case 44 : return 1;     // ,
+			case 45 : return 1;     // -
+			case 46 : return 1;     // .
+			case 47 : return 1;     // /
+			case 48 : return 2;     // 0
+			case 49 : return 2;     // 1
+			case 50 : return 2;     // 2
+			case 51 : return 2;     // 3
+			case 52 : return 2;     // 4
+			case 53 : return 2;     // 5
+			case 54 : return 2;     // 6
+			case 55 : return 2;     // 7
+			case 56 : return 2;     // 8
+			case 57 : return 2;     // 9
+			case 58 : return 1;     // :
+			case 59 : return 1;     // ;
+			case 60 : return 1;     // <
+			case 61 : return 1;     // =
+			case 62 : return 1;     // >
+			case 63 : return -1;    // ?
+			case 64 : return -1;    // @
+			case 65 : return 3;     // A
+			case 66 : return 3;     // B
+			case 67 : return 3;     // C
+			case 68 : return 3;     // D
+			case 69 : return 3;     // E
+			case 70 : return 3;     // F
+			case 71 : return 3;     // G
+			case 72 : return 3;     // H
+			case 73 : return 3;     // I
+			case 74 : return 3;     // J
+			case 75 : return 3;     // K
+			case 76 : return 3;     // L
+			case 77 : return 3;     // M
+			case 78 : return 3;     // N
+			case 79 : return 3;     // O
+			case 80 : return 3;     // P
+			case 81 : return 3;     // Q
+			case 82 : return 3;     // R
+			case 83 : return 3;     // S
+			case 84 : return 3;     // T
+			case 85 : return 3;     // U
+			case 86 : return 3;     // V
+			case 87 : return 3;     // W
+			case 88 : return 3;     // X
+			case 89 : return 3;     // Y
+			case 90 : return 3;     // Z
+			case 91 : return 1;     // [
+			case 92 : return -1;    // "\" 
+			case 93 : return 1;     // ]
+			case 94 : return 1;     // ^
+			case 95 : return -1;    // _
+			case 96 : return -1;    // `
+			case 97 : return 3;     // a
+			case 98 : return 3;     // b
+			case 99 : return 3;     // c
+			case 100 : return 3;    // d
+			case 101 : return 3;    // e
+			case 102 : return 3;    // f
+			case 103 : return 3;    // g
+			case 104 : return 3;    // h
+			case 105 : return 3;    // i
+			case 106 : return 3;    // j
+			case 107 : return 3;    // k
+			case 108 : return 3;    // l
+			case 109 : return 3;    // m
+			case 110 : return 3;    // n
+			case 111 : return 3;    // o
+			case 112 : return 3;    // p
+			case 113 : return 3;    // q
+			case 114 : return 3;    // r
+			case 115 : return 3;    // s
+			case 116 : return 3;    // t
+			case 117 : return 3;    // u
+			case 118 : return 3;    // v
+			case 119 : return 3;    // w
+			case 120 : return 3;    // x
+			case 121 : return 3;    // y
+			case 122 : return 3;    // z
+			case 123 : return -1;   // {
+			case 124 : return -1;   // |
+			case 125 : return -1;   // }
+			case 126 : return -1;   // ~
 		default : return 0;
 		}
 	}
