@@ -496,7 +496,6 @@ public class Parser {
 			node.setLeft(arrdecl());
 			return node;
 		}
-?????????
 		// NSIMP or NARRP
 		TreeNode checkNode = decl();
 		if(checkNode.getValue() == TreeNode.NARRD){
@@ -504,25 +503,21 @@ public class Parser {
 		}else if(checkNode.getValue() == TreeNode.NSDECL){
 			node.setValue(TreeNode.NSIMP);
 		}else{
-			return null;
+			return node;
 		}
 		node.setLeft(checkNode);
 		return node;
 	}
-	
-	
 	//<locals> ::= <dlist> | ε
 	private TreeNode locals(){
 		if(currentToken.value() != Token.TIDEN)return null;
 		return dlist();
 	}
-	
 	//<dlist> ::= <decl> <dlistb>
 	private TreeNode dlist(){
 		TreeNode node = decl();
 		return dlistb(node);
 	}
-	
 	// NDLIST	
 	// <dlistb> ::= , <dlist> | ε
 	private TreeNode dlistb(TreeNode node){
@@ -534,8 +529,7 @@ public class Parser {
 			return node;
 		}
 	}
-	
-	// <decl> ::= <sdecl> | <arrdecl>
+	// <decl> ::= <id> : <declb>
 	private TreeNode decl(){
 		TreeNode node = sdecl();
 		if(node == null){
@@ -546,6 +540,19 @@ public class Parser {
 		
 		return node;
 	}
+	?????????????????????
+	//NSDECL NARRD  
+	//<declb> ::= <stype> | <typeid>
+	private TreeNode declb(){
+		TreeNode node = sdecl();
+		if(node == null){
+			node = arrdecl();
+			if(node == null) return null;
+		}
+		currentToken = scanner.getToken();		
+		
+		return node;
+	}	
 	
 	//Special 
 	//<stats> ::= <stat> ; <statsb> | <strstat> <statsb> 
