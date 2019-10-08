@@ -529,31 +529,48 @@ public class Parser {
 			return node;
 		}
 	}
+
+	//NSDECL NARRD 
 	// <decl> ::= <id> : <declb>
+	//<declb> ::= <stype> | <typeid>
 	private TreeNode decl(){
-		TreeNode node = sdecl();
-		if(node == null){
-			node = arrdecl();
-			if(node == null) return null;
-		}
+		String errMsg = "Invalid variable declaration: ";
+		TreeNode node = new TreeNode(TreeNode.NUNDEF);
+
+		StRec stRec = new StRec();
+		stRec.setName(currentToken.getStr());
 		currentToken = scanner.getToken();		
 		
+		//need TCOLN token
+		if(!checkToken(Token.TCOLN, errMsg+"Not found ':'")) return node;
+		currentToken = scanner.getToken();
+		
+		if (currentToken.value() == Token.TIDEN){
+			//NARRD
+			node.setValue(TreeNode.NARRD);
+			stRec.setType(currentToken.getStr());
+			node.setType(stRec);
+			
+		}else{
+			//NSDECL
+			//<stype> ::= integer | real | boolean
+			if(currentToken.value() == Token.TINTG){
+				stRec.setType("integer");
+			}else if(currentToken.value() == Token.TREAL){
+				stRec.setType("real");
+			}else if(currentToken.value() == Token.TBOOL){
+				stRec.setType("boolean");
+			}else{
+				if(!checkToken(Token.TINTG, errMsg+"Unknown Type ")) return node;
+			}
+			node.setValue(TreeNode.NSDECL);
+		}	
+		node.setSymbol(stRec);
+		symbolTable.put(stRec.getName(), stRec);	
+		currentToken = scanner.getToken();	
 		return node;
 	}
-	?????????????????????
-	//NSDECL NARRD  
-	//<declb> ::= <stype> | <typeid>
-	private TreeNode declb(){
-		TreeNode node = sdecl();
-		if(node == null){
-			node = arrdecl();
-			if(node == null) return null;
-		}
-		currentToken = scanner.getToken();		
-		
-		return node;
-	}	
-	
+
 	//Special 
 	//<stats> ::= <stat> ; <statsb> | <strstat> <statsb> 
 	private TreeNode stats(){
@@ -564,7 +581,7 @@ public class Parser {
 		}else{
 			TreeNode node = stat();
 			//need TSEMI token
-			if(!checkToken(Token.TSEMI, "Invalid statements declaration: Not found ';'." )) return null;
+			if(!checkToken(Token.TSEMI, "Invalid statements declaration: Not found ';'." )) return node;
 			currentToken = scanner.getToken();		
 			return statsb(node);
 		}
