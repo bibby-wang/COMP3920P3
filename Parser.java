@@ -93,25 +93,23 @@ public class Parser {
 	private TreeNode globals(){
 		return new TreeNode(TreeNode.NGLOB, consts(), types(), arrays());
 	}
-	
 	// Special
-	// <consts> ::= constants <initlist> | ε
+	// <consts> ::=  ε |constants <initlist>
 	private TreeNode consts(){
-		
+		// need TCONS token
 		if(currentToken.value() != Token.TCONS) return null;
-		//get next token
+		// get next token
 		currentToken = scanner.getToken();		
 		return initlist();
 	}
 	// Special
-	//<initlist> ::= <init> <initlistb>
+	// <initlist> ::= <init> <initlistb>
 	private TreeNode initlist(){
-		//TreeNode node = new TreeNode(TreeNode.NUNDEF);
 		TreeNode node = init();
 		return initlistb(node);
 	}
 	// NILIST
-	// <initlistb> ::= , <initlist> | ε
+	// <initlistb> ::= ε | , <initlist>  
 	private TreeNode initlistb(TreeNode node){
 		if(currentToken.value() == Token.TCOMA){
 			//get next token
@@ -129,30 +127,32 @@ public class Parser {
 		if(!checkToken(Token.TIDEN, "Invalid initialisation: Not found ID name.")) return node;
 		StRec stRec = new StRec();
 		stRec.setName(currentToken.getStr());
-		currentToken = scanner.getToken();		
-		
+
+		//next token
+		currentToken = scanner.getToken();
 		//need TEQUL token
 		if(!checkToken(Token.TEQUL, "Invalid initialisation: Not found '=' .")) return node;
-		currentToken = scanner.getToken();		
+		currentToken = scanner.getToken();
 		// NINIT
 		node.setValue(TreeNode.NINIT);
 		symbolTable.put(stRec.getName(), stRec);
-		
+		node.setSymbol(stRec);		
 		node.setLeft(expr());
-		node.setSymbol(stRec);
 		return node;
 	}
-	
+	// Special
 	// <types> ::= types <typelist> | ε
 	private TreeNode types(){
+		//need TTYPS token
 		if(currentToken.value() != Token.TTYPS)return null;
 		//get next token
 		currentToken = scanner.getToken();		
 		return typelist();
 	}
-	
+	// Special
 	// <arrays> ::= arrays <arrdecls> | ε
 	private TreeNode arrays(){
+		//need TARRS token
 		if(currentToken.value() != Token.TARRS)return null;
 		//get next token
 		currentToken = scanner.getToken();		
@@ -176,23 +176,20 @@ public class Parser {
 		TreeNode node = new TreeNode(TreeNode.NUNDEF);
 		//need TMAIN token
 		if(!checkToken(Token.TMAIN, errMsg+"Keyword missing: Not found 'MAIN'.")) return node;
-		
-		currentToken = scanner.getToken();		
-		
+		currentToken = scanner.getToken();
+		// left node
 		node.setLeft(slist());
 		//need TBEGN token
 		if(!checkToken(Token.TBEGN, errMsg+"Keyword missing: Not found 'BEGIN'.")) return node;
-		currentToken = scanner.getToken();		
-		
+		currentToken = scanner.getToken();
+		//right node
 		node.setRight(stats());
 		//need TEND token
 		if(!checkToken(Token.TEND, errMsg+"Keyword missing: Not found 'END'.")) return node;
-		currentToken = scanner.getToken();		
-		
+		currentToken = scanner.getToken();
 		//need TCD19 token
 		if(!checkToken(Token.TCD19, errMsg+"Keyword missing: Not found 'CD19'.")) return node;
 		currentToken = scanner.getToken();		
-		
 		//need TIDEN token
 		if(!checkToken(Token.TIDEN, errMsg+"Not found ID name.")) return node;
 		StRec stRec = new StRec();
@@ -206,15 +203,16 @@ public class Parser {
 		return node;
 	}
 	
-	// NSDLST
+	// Special
 	//<slist> ::= <sdecl> <slistb>
 	private TreeNode slist(){
 		TreeNode node = sdecl();
 		return slistb(node);
 	}
-	
-	// <slistb> ::= , <slist> | ε
+	// NSDLST
+	// <slistb> ::= ε | , <slist> 
 	private TreeNode slistb(TreeNode node){
+		// need TCOMA token
 		if(currentToken.value() == Token.TCOMA){
 			//get next token
 			currentToken = scanner.getToken();	
@@ -224,17 +222,18 @@ public class Parser {
 		}
 	}
 	
-	// NTYPEL
+	// Special 
 	// <typelist> ::= <type> <typelistb>
 	private TreeNode typelist(){
-		TreeNode node = new TreeNode(TreeNode.NTYPEL);
+		
 		node.setLeft(type());
 		node.setRight(typelistb());
 		return node;
 	}
-	
+	// NTYPEL
 	// <typelistb> ::= <typelist> | ε
 	private TreeNode typelistb(){
+		TreeNode node = new TreeNode(TreeNode.NTYPEL);
 		if(currentToken.value() != Token.TIDEN)return null;
 		return typelist();
 	}
@@ -669,20 +668,27 @@ public class Parser {
 		if(currentToken.value() != Token.TIDEN)return null;
 		return alist();
 	}
-	
-	// NASGNS
+??????	
+
 	//<alist> ::= <id> <asgnstat> <alistb>
 	private TreeNode alist(){
+		if(!checkToken(Token.TIDEN, "Invalid initialisation: Not found ID name.")) return node;
+		StRec stRec = new StRec();			
+		stRec.setName(currentToken.getStr());
+		//node.setType(stRec);
+		symbolTable.put(stRec.getName(), stRec);
+		
+		
 		TreeNode node = new TreeNode(TreeNode.NASGNS);
 		node.setLeft(asgnstat());
 		node.setRight(alistb());
 		return node;
 	}
-	
+	// NASGNS	
 	// <alistb> ::= , <alist> | ε
-	private TreeNode alistb(){
+	private TreeNode alistb(TreeNode node){
 		
-		if(currentToken.value() != Token.TCOMA)	return null;
+		if(currentToken.value() != Token.TCOMA)	return node;
 		//get next token
 		currentToken = scanner.getToken();		
 		
@@ -831,11 +837,15 @@ public class Parser {
 	}
 	//???
 	// Special				
-	// <vlist> ::= <id> <var> <vlistb>
+?s?	// <vlist> ::= <id> <var> <vlistb>
 	private TreeNode vlist(){
+		if(!checkToken(Token.TIDEN, )) return node;
+		StRec stRec = new StRec();			
+		stRec.setName(currentToken.getStr());
+		//node.setType(stRec);
+		symbolTable.put(stRec.getName(), stRec);
 		if (currentToken.value() == Token.TIDEN)
-		TreeNode node = new TreeNode(TreeNode.NVLIST);
-		node.setLeft(var());
+		TreeNode node = var();
 		node.setRight(vlistb());
 		return node;
 	}
