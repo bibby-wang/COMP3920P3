@@ -347,7 +347,7 @@ public class Parser {
 		}else if(currentToken.value() == Token.TBOOL){
 			stRec.setType("boolean");
 		}else{
-			if(!checkToken(Token.TINTG, errMsg+"Not found Integer or Teal or Boolen type")) return node;
+			if(!checkToken(Token.TINTG, errMsg+"Unknown Type: Not found Integer or Real or Boolen type")) return node;
 		}
 	
 		node.setValue(TreeNode.NSDECL);
@@ -382,27 +382,23 @@ public class Parser {
 	private TreeNode arrdecl(){
 		String errMsg = "Invalid array declaration: ";
 		TreeNode node = new TreeNode(TreeNode.NUNDEF);
-		
 		//need TIDEN token
 		if(!checkToken(Token.TIDEN, errMsg+"Not found ID name.")) return node;
 		StRec stRec = new StRec();
 		stRec.setName(currentToken.getStr());
 		currentToken = scanner.getToken();		
-		
 		//need TCOLN token
 		if(!checkToken(Token.TCOLN, errMsg+"Not found ':'.")) return node;
 		currentToken = scanner.getToken();		
-		
-		
 		//need TIDEN token
 		if(!checkToken(Token.TIDEN, errMsg+"Not found TypeID name.")) return node;
-		????
-		stRec.setType(currentToken.getStr());
-		currentToken = scanner.getToken();		
-		node.setType(stRec);
 		node.setValue(TreeNode.NARRD);
+		stRec.setType(currentToken.getStr());
+		
+		node.setType(stRec);
 		node.setSymbol(stRec);
 		symbolTable.put(stRec.getName(), stRec);
+		currentToken = scanner.getToken();			
 		return node;
 	}
 	
@@ -410,14 +406,15 @@ public class Parser {
 	//<func> ::= function <id> ( <plist> ) : <rtype> <locals> begin <stats> end
 	private TreeNode func(){
 		String errMsg = "Invalid function declaration";
-		TreeNode node = new TreeNode(TreeNode.NFUND);
-		StRec stRec = new StRec();
+		TreeNode node = new TreeNode(TreeNode.NUNDEF);
+
 		//need TFUNC token
 		if(!checkToken(Token.TFUNC, errMsg+"Keyword missing: Not found 'FUNCTION'.")) return node;
 		currentToken = scanner.getToken();		
 		
 		//neeed TIDEN token
 		if(!checkToken(Token.TIDEN, errMsg+"Not found ID name.")) return node;
+		StRec stRec = new StRec();
 		stRec.setName(currentToken.getStr());
 		currentToken = scanner.getToken();		
 		
@@ -434,7 +431,6 @@ public class Parser {
 		if(!checkToken(Token.TCOLN, errMsg+"Not found ':'.")) return node;
 		currentToken = scanner.getToken();		
 		
-		//Resolution type TINTG or TREAL or TBOOL token
 		//<rtype> ::= integer | real | boolean | void
 		if(currentToken.value() == Token.TINTG){
 			stRec.setType("integer");
@@ -445,22 +441,20 @@ public class Parser {
 		}else if(currentToken.value() == Token.TVOID){
 			stRec.setType("void");
 		}else{
-			if(!checkToken(Token.TINTG, errMsg+"Not found integer or real or boolen or void type.")) return node;
+			if(!checkToken(Token.TINTG, errMsg+"Unknown Type: Not found Integer or Real or Boolen or Void type.")) return node;
 		}
 		currentToken = scanner.getToken();		
-		
+		symbolTable.put(stRec.getName(), stRec);
 		node.setMiddle(locals());
 		//need TBEGN token
 		if(!checkToken(Token.TBEGN, errMsg+"Keyword missing: Not found 'BEGIN'.")) return node;
 		currentToken = scanner.getToken();		
-		
 		node.setRight(stats());
 		//need TEND token
 		if(!checkToken(Token.TEND, errMsg+"Keyword missing: Not found 'END'.")) return node;
+		node.setValue(TreeNode.NFUND);
 		currentToken = scanner.getToken();		
-		
 		node.setSymbol(stRec);
-		symbolTable.put(stRec.getName(), stRec);
 		return node;
 	}
 	
@@ -502,7 +496,7 @@ public class Parser {
 			node.setLeft(arrdecl());
 			return node;
 		}
-		//??
+?????????
 		// NSIMP or NARRP
 		TreeNode checkNode = decl();
 		if(checkNode.getValue() == TreeNode.NARRD){
