@@ -624,30 +624,36 @@ public class Parser {
 			return repstat();
 		}else if(currentToken.value() == Token.TRETN){
 			return returnstat();
-		}else if(currentToken.value() == Token.TINPT || currentToken.value() == Token.TPRIN || currentToken.value() == Token.TPRLN){
+		}else if(currentToken.value() == Token.TINPT ||
+				 currentToken.value() == Token.TPRIN ||
+				 currentToken.value() == Token.TPRLN){
 			return iostat();
 		}else{
-		
 			return statb();
 		}
 	}
 	//<statb> ::= <asgnstat> | <callstat> 
 	private TreeNode statb(){
+		TreeNode node = new TreeNode(TreeNode.NUNDEF);		
 		//need TIDEN token
-		if(!checkToken(Token.TIDEN, "Invalid statement declaration: Invalid Keyword.")) return null;
-		currentToken = scanner.getToken();
+		if(!checkToken(Token.TIDEN, "Invalid statement declaration: Invalid Keyword.")) return node;
+		currentToken = scanner.getToken();		
+		StRec stRec = new StRec();
+		stRec.setName(currentToken.getStr());
+		node.setSymbol(stRec);
+
 		
 		if(currentToken.value() == Token.TLPAR){
-			return callstat();
+			return callstat(node);
 		}else{
-			return asgnstat();
+			return asgnstat(node);
 		}
 	}
 	// NFOR
 	//<forstat> ::= for ( <asgnlist> ; <bool> ) <stats> end
 	private TreeNode forstat(){
 		String errMsg = "Invalid For structure: ";
-		TreeNode node = new TreeNode(TreeNode.NFOR);
+		TreeNode node = new TreeNode(TreeNode.NUNDEF);
 		//need TFOR token
 		if(!checkToken(Token.TFOR, errMsg+"Keyword missing: Not found 'FOR'.")) return node;
 		currentToken = scanner.getToken();		
@@ -666,14 +672,14 @@ public class Parser {
 		//need TEND token
 		if(!checkToken(Token.TEND, errMsg+"Keyword missing: Not found 'END'.")) return node;
 		currentToken = scanner.getToken();		
+		node.setValue(TreeNode.NFOR);
 		return node;
 	}
-	
 	// NREPT
 	//<repstat> ::= repeat ( <asgnlist> ) <stats> until <bool>
 	private TreeNode repstat(){
 		String errMsg = "Invalid repeat structure: ";
-		TreeNode node = new TreeNode(TreeNode.NREPT);
+		TreeNode node = new TreeNode(TreeNode.NUNDEF);
 		//need TREPT token
 		if(!checkToken(Token.TREPT, errMsg+"Keyword missing: Not found 'REPEAT'.")) return node;
 		currentToken = scanner.getToken();		
@@ -689,6 +695,7 @@ public class Parser {
 		if(!checkToken(Token.TUNTL, errMsg+"Keyword missing: Not found 'UNTIL'.")) return node;
 		currentToken = scanner.getToken();		
 		node.setRight(bool());
+		node.setValue(TreeNode.NREPT);
 		return node;
 	}
 	
@@ -697,10 +704,9 @@ public class Parser {
 		if(currentToken.value() != Token.TIDEN)return null;
 		return alist();
 	}
-??????	
-
 	//<alist> ::= <id> <asgnstat> <alistb>
 	private TreeNode alist(){
+		//need TIDEN token
 		if(!checkToken(Token.TIDEN, "Invalid initialisation: Not found ID name.")) return node;
 		StRec stRec = new StRec();			
 		stRec.setName(currentToken.getStr());
@@ -725,7 +731,7 @@ public class Parser {
 	}
 	
 	// <asgnstat> ::= <var> <asgnop> <bool>
-	private TreeNode asgnstat(){
+	private TreeNode asgnstat(TreeNode node){
 		TreeNode node = new TreeNode(TreeNode.NUNDEF);
 		node.setLeft(var());
 		// <asgnop> ::= = | += | -= | *= | /= // NASGN, NPLEQ, NMNEQ, NSTEQ, NDVEQ
@@ -813,14 +819,13 @@ public class Parser {
 	}
 	
 	// NCALL
-	//<callstat> ::= <id> ( <callstatb> ) 
+	//<callstat> ::= ( <callstatb> ) 
 	//<callstatb> ::= <elist> | ε
-	private TreeNode callstat(){
+	private TreeNode callstat(TreeNode node){
 		String errMsg = "Invalid call statement: ";
 		TreeNode node = new TreeNode(TreeNode.NCALL);
 		StRec stRec = new StRec();
-		//need TIDEN token
-		if(!checkToken(Token.TIDEN, errMsg+"Not found ID name.")) return node;
+
 		stRec.setName(currentToken.getStr());
 		currentToken = scanner.getToken();		
 		//need TLPAR token
