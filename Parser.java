@@ -225,17 +225,17 @@ public class Parser {
 	// Special 
 	// <typelist> ::= <type> <typelistb>
 	private TreeNode typelist(){
-		
-		node.setLeft(type());
-		node.setRight(typelistb());
-		return node;
+		TreeNode node=type();
+		return typelistb(node);
 	}
 	// NTYPEL
 	// <typelistb> ::= <typelist> | ε
-	private TreeNode typelistb(){
-		TreeNode node = new TreeNode(TreeNode.NTYPEL);
-		if(currentToken.value() != Token.TIDEN)return null;
-		return typelist();
+	private TreeNode typelistb(TreeNode node){
+		if(currentToken.value() == Token.TIDEN){
+			return new TreeNode(TreeNode.NILIST, node, typelist());
+		}else{
+			return node;
+		}
 	}
 	// NRTYPE  NATYPE
 	//<type> ::= <structid> is <fields> end | <typeid> is array [ <expr> ] of <structid>
@@ -250,7 +250,6 @@ public class Parser {
 		stRec.setName(currentToken.getStr());
 		currentToken = scanner.getToken();		
 
-		node.setSymbol(stRec);
 		// need TIS token
 		if(!checkToken(Token.TIS, errMsg+"Keyword missing: Not found 'IS'.")) return node;
 		currentToken = scanner.getToken();		
@@ -258,21 +257,26 @@ public class Parser {
 		//NRTYPE node or NATYPE node
 		if(currentToken.value() != Token.TARAY){
 			//NRTYPE
+			
 			stRec.setType("Struct");
 			symbolTable.put(stRec.getName(), stRec);
-			
-			node.setValue(TreeNode.NRTYPE);
+			node.setSymbol(stRec);
+
 			node.setLeft(fields());
 			//need TEND token
 			if(!checkToken(Token.TEND, errMsg+"Keyword missing: Not found 'END'.")) return node;
-			currentToken = scanner.getToken();			
+			// Confirmed as NRTYPE node
+			node.setValue(TreeNode.NRTYPE); 
+			currentToken = scanner.getToken();
 			return node;
 		}else{
 			//NATYPE
-			node.setValue(TreeNode.NATYPE);
+
 			currentToken = scanner.getToken();		
 			stRec.setType("Type");
 			symbolTable.put(stRec.getName(), stRec);
+			node.setSymbol(stRec);
+			
 			//need TLBRK token
 			if(!checkToken(Token.TLBRK, errMsg+"Not found '['.")) return node;
 			currentToken = scanner.getToken();
@@ -292,12 +296,14 @@ public class Parser {
 			stRec2.setType("Struct");
 			node.setType(stRec2);
 			symbolTable.put(stRec2.getName(), stRec2);	
-			
+			// Confirmed as NATYPE node
+			node.setValue(TreeNode.NATYPE); 
 			currentToken = scanner.getToken();
 			return node;
-		}		
+		}
 	}
 	
+	// Special  
 	//<fields> ::= <sdecl> <fieldsb>
 	private TreeNode fields(){
 		TreeNode node = sdecl();
@@ -315,17 +321,16 @@ public class Parser {
 			return node;
 		}
 	}
-	
-	/// ??????
 	// NSDECL
 	//<sdecl> ::= <id> : <stype>
 	private TreeNode sdecl(){
 		String errMsg = "Invalid variable declaration: ";
-		TreeNode node = new TreeNode(TreeNode.NSDECL);
-		StRec stRec = new StRec();
+		TreeNode node = new TreeNode(TreeNode.NUNDEF);
+
 		
 		//need TIDEN token
 		if(!checkToken(Token.TIDEN, errMsg+"Not found ID name.")) return node;
+		StRec stRec = new StRec();
 		stRec.setName(currentToken.getStr());
 		currentToken = scanner.getToken();		
 		
@@ -342,22 +347,25 @@ public class Parser {
 		}else if(currentToken.value() == Token.TBOOL){
 			stRec.setType("boolean");
 		}else{
-			if(!checkToken(Token.TINTG, errMsg+"Not found integer or real or boolen type")) return node;
+			if(!checkToken(Token.TINTG, errMsg+"Not found Integer or Teal or Boolen type")) return node;
 		}
-		currentToken = scanner.getToken();		
-		
+	
+		node.setValue(TreeNode.NSDECL);
 		node.setSymbol(stRec);
-		symbolTable.put(stRec.getName(), stRec);
+		//node.setType(stRec); //?? need or not ??			
+		symbolTable.put(stRec.getName(), stRec);		
+		
+		currentToken = scanner.getToken();	
 		return node;		
 	}
 	
-	// NALIST
+	//Special
 	//<arrdecls> ::= <arrdecl> <arrdeclsb>
 	private TreeNode arrdecls(){
 		TreeNode node = arrdecl();
 		return arrdeclsb(node);
 	}
-	
+	// NALIST
 	// <arrdeclsb> ::= , <arrdecls> | ε
 	private TreeNode arrdeclsb(TreeNode node){
 		if(currentToken.value() == Token.TCOMA){
@@ -373,10 +381,11 @@ public class Parser {
 	//<arrdecl> ::= <id> : <typeid>
 	private TreeNode arrdecl(){
 		String errMsg = "Invalid array declaration: ";
-		TreeNode node = new TreeNode(TreeNode.NARRD);
-		StRec stRec = new StRec();
+		TreeNode node = new TreeNode(TreeNode.NUNDEF);
+		
 		//need TIDEN token
 		if(!checkToken(Token.TIDEN, errMsg+"Not found ID name.")) return node;
+		StRec stRec = new StRec();
 		stRec.setName(currentToken.getStr());
 		currentToken = scanner.getToken();		
 		
@@ -387,9 +396,11 @@ public class Parser {
 		
 		//need TIDEN token
 		if(!checkToken(Token.TIDEN, errMsg+"Not found TypeID name.")) return node;
+		????
 		stRec.setType(currentToken.getStr());
 		currentToken = scanner.getToken();		
-		
+		node.setType(stRec);
+		node.setValue(TreeNode.NARRD);
 		node.setSymbol(stRec);
 		symbolTable.put(stRec.getName(), stRec);
 		return node;
