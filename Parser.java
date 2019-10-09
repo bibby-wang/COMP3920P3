@@ -772,7 +772,7 @@ public class Parser {
 	//Special  
 	//<ifstat> ::= if ( <bool> ) <stats> <ifstatb>
 	private TreeNode ifstat(){
-		String errMsg = "Invalid if statement: ";
+		String errMsg = "Invalid if structure: ";
 		TreeNode node = new TreeNode(TreeNode.NUNDEF);
 		//need TIFTH token
 		if(!checkToken(Token.TIFTH, errMsg+"Keyword missing: Not found 'IF'")) return node;
@@ -780,6 +780,7 @@ public class Parser {
 		//need TLPAR token
 		if(!checkToken(Token.TLPAR, errMsg+"Not found '('")) return node;
 		currentToken = scanner.getToken();		
+
 		node.setLeft(bool());
 		//need TRPAR token
 		if(!checkToken(Token.TRPAR, errMsg+"Not found ')'")) return node;
@@ -792,7 +793,7 @@ public class Parser {
 	//NIFTH NIFTE 
 	//<ifstatb> ::= end | else <stats> end
 	private TreeNode ifstatb(TreeNode node){
-		String errMsg = "Invalid if statement: ";
+		String errMsg = "Invalid if structure: ";
 		//NIFTH or NIFTE
 		if(currentToken.value() == Token.TELSE){
 			currentToken = scanner.getToken();				
@@ -961,17 +962,19 @@ public class Parser {
 	// <boolb> ::= <logop> <rel> <boolb> | ε
 	private TreeNode boolb(TreeNode node){
 
-		if(currentToken.value() != Token.TAND 
-		|| currentToken.value() != Token.TOR 
-		|| currentToken.value() != Token.TXOR){
+		if(currentToken.value() == Token.TAND 
+		|| currentToken.value() == Token.TOR 
+		|| currentToken.value() == Token.TXOR){
+			TreeNode nodeLog = logop();
+			nodeLog.setLeft(node);
+			nodeLog.setRight(rel());		
+			TreeNode nodeB = new TreeNode(TreeNode.NBOOL);
+			nodeB.setLeft(nodeLog);
+			return boolb(nodeB);
+		}else{
 			return node;
 		}
-		TreeNode nodeLog = logop();
-		nodeLog.setLeft(node);
-		nodeLog.setRight(rel());		
-		TreeNode nodeB = new TreeNode(TreeNode.NBOOL);
-		nodeB.setLeft(nodeLog);
-		return boolb(nodeB);
+
 	}
 		
 		
@@ -1014,17 +1017,21 @@ public class Parser {
 	
 	// <relb> ::= <relop> <expr>  | ε
 	private TreeNode relb(TreeNode node){
-		
-		if(currentToken.value() != Token.TEQEQ
-		|| currentToken.value() != Token.TNEQL
-		|| currentToken.value() != Token.TGRTR
-		|| currentToken.value() != Token.TLEQL
-		|| currentToken.value() != Token.TLESS
-		|| currentToken.value() != Token.TGEQL) return node;
-		TreeNode nodeN=relop();
-		nodeN.setLeft(node);
-		nodeN.setRight(expr());
-		return nodeN;
+		if(currentToken.value() == Token.TEQEQ
+		|| currentToken.value() == Token.TNEQL
+		|| currentToken.value() == Token.TGRTR
+		|| currentToken.value() == Token.TLEQL
+		|| currentToken.value() == Token.TLESS
+		|| currentToken.value() == Token.TGEQL){
+			TreeNode nodeN=relop();
+			nodeN.setLeft(node);
+			nodeN.setRight(expr());
+			return nodeN;
+		}else{
+			return node;				
+		}
+
+
 	}
 	
 	// NEQL, NNEQ, NGRT, NLEQ, NLSS, NGEQ
@@ -1032,7 +1039,7 @@ public class Parser {
 	private TreeNode relop(){
 		TreeNode node  = new TreeNode(TreeNode.NUNDEF);
 		if(currentToken.value() == Token.TEQEQ){
-			currentToken = scanner.getToken();
+			currentToken = scanner.getToken();	
 			node.setValue(TreeNode.NEQL);
 		}else if(currentToken.value() == Token.TNEQL){
 			currentToken = scanner.getToken();
@@ -1195,7 +1202,7 @@ public class Parser {
 		//ID token
 		StRec stRec = new StRec();
 		stRec.setName(currentToken.getStr());
-		currentToken = scanner.getToken();	
+		currentToken = scanner.getToken();
 		node.setSymbol(stRec);
 		if (currentToken.value() == Token.TLPAR){
 			return fncall(node);
