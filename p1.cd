@@ -1,0 +1,119 @@
+/-- Student no.: c3186200
+/--      Course: COMP3290
+/--     Polygon: Program to find the area of a polygon
+/-- -------------------------------------------------------------
+
+CD19 Polygon
+
+constants
+	MAX = 21
+
+types
+	point is
+		x : real,
+		y : real
+	end
+	
+	testStruct is
+		testMember1 : integer,
+		testMember2 : real,
+		testMember3 : boolean
+	end
+
+	points is array [MAX] of point
+	testType is array [MAX - 10] of testStruct
+
+arrays
+	polygon : points,
+	testArray : testType
+
+function voidParamless() : void
+	begin
+		printline "Here we are";
+		return;
+	end
+	
+function printToStd(val : integer, type : integer) : void
+	begin
+		
+		if (type == 0)
+			printline "Setting polygon with ", val, " points...";
+		else
+			if (type == 1)
+				printline "Inputting points from stdin";
+			else
+				if (type == 2)
+					printline "Input number of points:";
+				end
+			end
+		end
+		return;
+	end
+	
+function setPoints(pointCounts : integer) : void
+i : integer,
+copyArr : points
+	begin
+		printToStd(pointCounts, 0); /-- function call in a function call
+		/-- If you use the line below, it should set the y value to be the x value in the global polygon array.
+		/--copyArr = polygon;
+		printToStd(pointCounts, 1);
+		for (i = 0; i < pointCounts)
+			input polygon[i].x;
+			input polygon[i].y;
+			copyArr[i].y = polygon[i].x; /-- Inverts the members of the polygon array to show local arrays working
+			copyArr[i].x = polygon[i].y;
+			i += 1;
+		end
+		return;
+	end
+
+function findArea(pointCounts : integer) : real
+i : integer,
+j : integer,
+k : integer,
+l : integer,
+area : real
+	begin
+	
+		area = 0.0;
+		for (i = 0, j = 0, k = 0; ((i < pointCounts - 2) and ((j == 0) or (k == 0))))
+			area += (polygon[i + 1].x - polygon[i].x) * (polygon[i + 1].y - polygon[i].y);
+			i += 1;
+		end
+		
+		area *= area;
+		area /= 2.0;
+		return area;
+	end
+
+main
+Area : real,
+pointCount : integer,
+i : integer
+	begin
+	
+		/-- using the test array
+		for (i = 0; i < (MAX - 10))
+			testArray[i].testMember1 = 1;
+			testArray[i].testMember2 = 1.1;
+			testArray[i].testMember3 = false;
+			i += 1;
+		end
+		
+		voidParamless();
+		printToStd(0, 2);
+		input pointCount;
+		
+		setPoints(pointCount);
+		
+		Area = findArea(pointCount) + 0.000000015; /-- Checking for real constants and function calls in expressions
+		printline "Area is ", Area;
+		
+		if ((testArray[i].testMember1 % 0) == 0)
+			polygon[testArray[0].testMember1].x = polygon[testArray[0].testMember1].y;
+		end
+		
+		printToStd(0, 2);
+	
+	end CD19 Polygon

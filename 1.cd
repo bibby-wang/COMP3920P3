@@ -7,11 +7,11 @@
 
 CD19 a
 MAIN
-	x : real /-- fails need ,
+	x : real ,/-- fails need ,
 	y : integer
 BEGIN
-	x = 2,3 ; /-- fails can not be , for a real number
-	y = -2 ; /--  fails negative number Should be 0-2;
-	printline x    /-- fails need ;
+	x = 2.3 ; /-- fails can not be , for a real number
+	y = 4-2 ; /--  fails negative number Should be 0-2;
+	printline x;    /-- fails need ;
 END
 CD19 a

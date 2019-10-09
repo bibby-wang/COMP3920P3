@@ -1,0 +1,65 @@
+CD19 Simple
+
+constants
+	SIZEARR = 4
+
+types
+	point is
+		x : integer,
+		y : integer
+	end
+
+	points is array [SIZEARR] of point
+	
+arrays
+	X : points, Copy : points
+
+function function2(he : integer) : integer
+i : integer
+	begin
+		i = 0;
+		i = he * 2;
+		
+		return i;
+end
+
+function function3(he : integer) : void
+i : integer
+	begin
+		i = 0;
+		i = he;
+		
+		repeat (i = 0)
+			X[i].x = 1;
+			X[i].y = 208;
+			
+			i += 1;
+		until i == (SIZEARR);
+		
+		printline "Here we are in the function ", "another string";
+		
+		return;
+end	
+
+function function1(xy : points, a : real) : integer
+i : integer
+	begin
+		i = 0;
+		i =  xy[i].x;
+		function3(3);
+		return i;
+end
+
+main
+	i : integer
+begin	
+	i = 123;
+	X[0].x = 111;
+	
+	Copy = X;
+	Copy[1].x = 112;
+	i = function2(function1(X, 0.0) + function2(1));
+	
+	i += 1;
+	
+end CD19 Simple

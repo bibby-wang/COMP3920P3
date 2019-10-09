@@ -43,9 +43,14 @@ public class A3{
 				Parser parser=new Parser(scanner);
 				
 				PrintWriter outFile= new PrintWriter(new FileWriter("_parser_"+args[i]));
+				System.out.println("=====OUTPUT: _parser_"+args[i]+" =====");
+				TreeNode tree=parser.getSyntaxTree();
 				
-				TreeNode.printTree(outFile, parser.getSyntaxTree());
+				TreeNode.printTree(outFile, tree);
+				
 				System.out.println(parser.getErrorList());
+				System.out.println("=====FINISH=====");
+				
 				outFile.close();
 				
 				// System.out.println("\r\n Tokens count is: "+countToken);

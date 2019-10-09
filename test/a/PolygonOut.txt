@@ -1,0 +1,5 @@
+Here we are
+Input number of points:
+Setting polygon with  4 points...
+Inputting points from stdin
+Area is  11.704241554972974

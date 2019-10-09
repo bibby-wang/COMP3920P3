@@ -112,20 +112,22 @@ public class TreeNode {
 		if (tr.nodeValue == NPROG) count = 0;
 		out.print(PRINTNODE[tr.nodeValue]+" ");
 		count++;
-		if (count%7 == 0) out.println();
+		if (count%10 == 0) out.println();
 		if (tr.symbol != null) {
 			out.print(tr.symbol.getName() + " ");
 			count++;
-			if (count%7 == 0) out.println();
+			if (count%10 == 0) out.println();
 		}
 		if (tr.type   != null) {
 			out.print(  tr.type.getName() + " ");
 			count++;
-			if (count%7 == 0) out.println();
+			if (count%10 == 0) out.println();
 		}
 		if (tr.left   != null) { printTree(out,tr.left);   }
 		if (tr.middle != null) { printTree(out,tr.middle); }
 		if (tr.right  != null) { printTree(out,tr.right);  }
-		if (tr.nodeValue == NPROG && count%7 != 0) out.println();
+		if (tr.nodeValue == NPROG && count%10 != 0) out.println();
 	}
+
+
 }

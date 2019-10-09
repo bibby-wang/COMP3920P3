@@ -73,6 +73,7 @@ public class Parser {
 		if(!checkToken(Token.TIDEN, "Invalid initialisation: Not found ID name.")) return node;
 		StRec stRec = new StRec();			
 		stRec.setName(currentToken.getStr());
+		stRec.setType("CD19");
 		//node.setType(stRec);
 		symbolTable.put(stRec.getName(), stRec);
 		
@@ -203,9 +204,9 @@ public class Parser {
 		StRec stRec = new StRec();
 		//??
 		stRec.setName(currentToken.getStr());
-		node.setSymbol(stRec);
+		//node.setSymbol(stRec);
 		//type?
-		//stRec.setType(currentToken.getStr());
+		stRec.setType("CD19");
 		//node.setType(stRec);
 		symbolTable.put(stRec.getName(), stRec);
 		//need TEOF token
