@@ -1,0 +1,31 @@
+CD19 ExampleAST
+constants
+m =10+15 , l=1-funcCall1()
+types
+new_struct is k:integer,j:boolean,i:real end
+new_array is array [ 10 + 10 ] of new_struct
+arrays arrInstance1 : new_array, arrInstance2: new_array
+function my_func (p1 : integer, p2 : boolean, p3 : real, pArr : new_array) :
+integer begin return 10; end
+function anotherFunc() : void
+    local1 : boolean,
+    local2 : integer,
+    local3 : real,
+    localArr : new_array
+    begin
+        input local1, local2, local3;
+        print "Hello", 10*20-30/100, "last one";
+        fnCall();
+        local3 = 12.12;
+        localArr[fnCall2()].rand = true;
+        return;
+    end
+/-- function my_func (hahaha:integer) : integer
+main
+i:integer, j:integer, k:integer
+begin
+input i;
+input j;
+k = i + j;
+printline k;
+end CD19 ExampleAST

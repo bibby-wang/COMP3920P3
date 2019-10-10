@@ -1168,19 +1168,22 @@ public class Parser {
 			return node;
 		}else if(currentToken.value() == Token.TTRUE){
 			node.setValue(TreeNode.NTRUE);
-			stRec.setName(currentToken.getStr());
+			//stRec.setName(currentToken.getStr());
+			//node.setSymbol(stRec);
+			//symbolTable.put(stRec.getName(), stRec);
+			
 			//get next token
 			currentToken = scanner.getToken();
-			node.setSymbol(stRec);
-			symbolTable.put(stRec.getName(), stRec);
 			return node;
 		}else if(currentToken.value() == Token.TFALS){
 			node.setValue(TreeNode.NFALS);
-			stRec.setName(currentToken.getStr());
+			//System.out.println("====: "+currentToken.toString());
+			//stRec.setName(currentToken.getStr());
+			//node.setSymbol(stRec);
+			//symbolTable.put(stRec.getName(), stRec);
+			
 			//get next token
 			currentToken = scanner.getToken();
-			node.setSymbol(stRec);
-			symbolTable.put(stRec.getName(), stRec);
 			return node;
 		}else if(currentToken.value() == Token.TIDEN){
 			return exponentb();	

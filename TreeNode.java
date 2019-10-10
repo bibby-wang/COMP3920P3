@@ -107,27 +107,43 @@ public class TreeNode {
   //	it then you are free to implement your own XML or
   //	whatever you like tree output routine.
   //
+	private static String formatStr(String Str){
+		String S="";
+		int c = 6-(Str.length()%7);
+		for (int i=0;i<c;i++){S+=" ";}
+		return Str+S;
+	}
 
 	public static void printTree(PrintWriter out, TreeNode tr) {
 		if (tr.nodeValue == NPROG) count = 0;
-		out.print(PRINTNODE[tr.nodeValue]+" ");
-		count++;
-		if (count%10 == 0) out.println();
+		String fString=formatStr(PRINTNODE[tr.nodeValue])+" ";
+		out.print(fString);
+		count+=(fString.length()/7);
+		//new line
+		if (count%10 == 0||count>10){out.println();  count=0;}
+		
 		if (tr.symbol != null) {
-			out.print(tr.symbol.getName() + " ");
-			count++;
-			if (count%10 == 0) out.println();
+			fString=formatStr(tr.symbol.getName()) + " ";
+			out.print(fString);
+			count+=(fString.length()/7);
+			//new line
+			if (count%10 == 0||count>10) {out.println();  count=0;}
+
 		}
+		
 		if (tr.type   != null) {
-			out.print(  tr.type.getName() + " ");
-			count++;
-			if (count%10 == 0) out.println();
+			fString=formatStr(tr.type.getName()) + " ";
+			out.print(fString);
+			count+=(fString.length()/7);
+			//new line
+			if (count%10 == 0||count>10){ out.println();  count=0;}
 		}
 		if (tr.left   != null) { printTree(out,tr.left);   }
 		if (tr.middle != null) { printTree(out,tr.middle); }
 		if (tr.right  != null) { printTree(out,tr.right);  }
-		if (tr.nodeValue == NPROG && count%10 != 0) out.println();
+		if (tr.nodeValue == NPROG && count%10 != 0) {out.println();  count=0;};
 	}
+
 
 
 }

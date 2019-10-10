@@ -41,18 +41,25 @@ public class A3{
 				// }
 				
 				Parser parser=new Parser(scanner);
-				
-				PrintWriter outFile= new PrintWriter(new FileWriter("_parser_"+args[i]));
-				System.out.println("=====OUTPUT: _parser_"+args[i]+" =====");
+				PrintWriter outFile= new PrintWriter(new FileWriter(args[i]+"_parser_.cdt"));
+				System.out.println("=====Output File: "+args[i]+"_parser_.cdt =====");				
+				PrintWriter outTerm= new PrintWriter(System.out);
 				TreeNode tree=parser.getSyntaxTree();
 				
 				TreeNode.printTree(outFile, tree);
-				
-				System.out.println(parser.getErrorList());
-				System.out.println("=====FINISH=====");
+				TreeNode.printTree(outTerm, tree);
+				System.out.println("Pre-Order Traversal:");
+				outTerm.println();
 				
 				outFile.close();
+				outTerm.close();
 				
+				if (parser.getErrorList()!=""){
+					System.out.println("=====Errors: =====");
+					System.out.println(parser.getErrorList());
+				}else{
+					System.out.println("=====Not Found Error.=====");
+				}				
 				// System.out.println("\r\n Tokens count is: "+countToken);
 			}
 			
