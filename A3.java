@@ -6,61 +6,55 @@
 // Due: September 27th 
 // Binbin.Wang C3214157
 
-// while not scanner.eof( ) do {
-	// token = scanner . gettoken( );
-	// scanner . printToken(token);
-// }
+
 import java.io.PrintWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.FileReader;
 public class A3{
 	
 	public static void main(String[] args) throws IOException{
 		// check file name
-		
 		if (args.length>0){
 			// Simultaneous scanning of multiple files
 			for(int i=0; i<args.length; i++){
 				if (i>0)System.out.println("");
 				System.out.println("=====File: "+args[i]+"=====\r\n");
+
 				//sacnner
 				Scanner scanner=new Scanner(args[i]);
+			
+				// Modify the output file name
+				String fileN= args[i].substring(0,args[i].lastIndexOf('.'));
+				
+				// output file
+				PrintWriter outFile= new PrintWriter(new FileWriter(fileN+"_tree.cdr"));
 				//parser
-
-				
-				Token tempToken;
-				
-				int countToken=0;
-				// while (!scanner.eof()){
-					// countToken++;
-					// tempToken = scanner.getToken();
-					// // System.out.println(tempToken.toString());
-					// scanner.printToken(tempToken);
-					
-					
-				// }
-				
-				Parser parser=new Parser(scanner);
-				PrintWriter outFile= new PrintWriter(new FileWriter(args[i]+"_parser_.cdt"));
-				System.out.println("=====Output File: "+args[i]+"_parser_.cdt =====");				
-				PrintWriter outTerm= new PrintWriter(System.out);
+				Parser parser=new Parser(scanner);	
+				// get the Syntax Tree and write to file: Source File name _tree.cdr)
 				TreeNode tree=parser.getSyntaxTree();
-				
 				TreeNode.printTree(outFile, tree);
-				TreeNode.printTree(outTerm, tree);
 				System.out.println("Pre-Order Traversal:");
-				outTerm.println();
-				
 				outFile.close();
-				outTerm.close();
-				
+
 				if (parser.getErrorList()!=""){
-					System.out.println("=====Errors: =====");
+					System.out.println("=***=Errors: =***=");
 					System.out.println(parser.getErrorList());
 				}else{
-					System.out.println("=====Not Found Error.=====");
-				}				
-				// System.out.println("\r\n Tokens count is: "+countToken);
+					// no errors
+					// Output to the terminal when there is no error in the program
+					BufferedReader br = new BufferedReader(new FileReader(fileN+"_tree.cdr"));
+					String printLine;
+					// print by line
+					while ((printLine = br.readLine()) != null) {
+
+						System.out.println(printLine);
+					}
+				}
+	
+				System.out.println("\r\n=*= Output File: "+fileN+"_tree.cdr");
+				System.out.println("=====Finished: "+args[i]+"=====");				
 			}
 			
 		}else{

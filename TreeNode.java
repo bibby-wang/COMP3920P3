@@ -107,6 +107,30 @@ public class TreeNode {
   //	it then you are free to implement your own XML or
   //	whatever you like tree output routine.
   //
+	// public static void printTree(PrintStream out, TreeNode tr) {
+		// if (tr.nodeValue == NPROG) count = 0;
+		// out.print(PRINTNODE[tr.nodeValue]+" ");
+		// count++;
+		// if (count%7 == 0) out.println();
+		// if (tr.symbol != null) {
+			// out.print(tr.symbol.getName() + " ");
+			// count++;
+			// if (count%7 == 0) out.println();
+		// }
+		// if (tr.type   != null) {
+			// out.print(  tr.type.getName() + " ");
+			// count++;
+			// if (count%7 == 0) out.println();
+		// }
+		// if (tr.left   != null) { printTree(out,tr.left);   }
+		// if (tr.middle != null) { printTree(out,tr.middle); }
+		// if (tr.right  != null) { printTree(out,tr.right);  }
+		// if (tr.nodeValue == NPROG && count%7 != 0) out.println();
+	// }
+	
+ 	//modified by bibby 
+	//change: prints tree pre-order as a flat 10 columns per line
+	//and	each columns has 7 characters
 	private static String formatStr(String Str){
 		String S="";
 		int c = 6-(Str.length()%7);

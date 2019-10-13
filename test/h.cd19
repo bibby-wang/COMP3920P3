@@ -1,0 +1,18 @@
+/--instantiates 3 floats pluses x and y and prints out the result
+CD19 testd1
+main
+/--instantiated variables
+   x : real,
+   y : real,
+   z : real
+/--main function
+   begin
+/--set variables
+       x = 1 ;
+       y = 2 ;
+/--do the actual function
+       x+y = z ;
+/--print result
+       printline z ;
+   end
+CD19 testd1

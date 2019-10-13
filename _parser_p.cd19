@@ -1,3 +1,0 @@
-NPROG  Polygon NGLOB  NINIT  maxPoints NILIT  20 NILIST NRTYPE point 
-NFLIST NSDECL x NSDECL y NATYPE points point NSIMV  maxPoints 
-NARRD  thePolygon thePolygon NFUNCS  NUNDEF NUNDEF NUNDEF 
