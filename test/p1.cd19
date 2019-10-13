@@ -5,7 +5,7 @@
 CD19 Polygon
 
 constants
-	MAX = 21
+	MAX = 21, D=Df()
 
 types
 	point is

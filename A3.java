@@ -29,7 +29,7 @@ public class A3{
 				String fileN= args[i].substring(0,args[i].lastIndexOf('.'));
 				
 				// output file
-				PrintWriter outFile= new PrintWriter(new FileWriter(fileN+"_tree.cdr"));
+				PrintWriter outFile= new PrintWriter(new FileWriter(fileN+"_tree.cdt"));
 				//parser
 				Parser parser=new Parser(scanner);	
 				// get the Syntax Tree and write to file: Source File name _tree.cdr)
@@ -44,7 +44,7 @@ public class A3{
 				}else{
 					// no errors
 					// Output to the terminal when there is no error in the program
-					BufferedReader br = new BufferedReader(new FileReader(fileN+"_tree.cdr"));
+					BufferedReader br = new BufferedReader(new FileReader(fileN+"_tree.cdt"));
 					String printLine;
 					// print by line
 					while ((printLine = br.readLine()) != null) {
@@ -53,7 +53,7 @@ public class A3{
 					}
 				}
 	
-				System.out.println("\r\n=*= Output File: "+fileN+"_tree.cdr");
+				System.out.println("\r\n=*= Output File: "+fileN+"_tree.cdt");
 				System.out.println("=====Finished: "+args[i]+"=====");				
 			}
 			

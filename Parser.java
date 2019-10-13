@@ -322,7 +322,10 @@ public class Parser {
 		}else if(currentToken.value() == Token.TBOOL){
 			stRec.setType("boolean");
 		}else{
-			if(!checkToken(Token.TINTG, errMsg+"Unknown Type: Not found Integer or Real or Boolen type")) return node;
+			if(!checkToken(Token.TINTG, errMsg+"Unknown Type: Not found Integer or Real or Boolen type")){
+				currentToken = scanner.getToken();
+				return node;
+			}
 		}
 		node.setValue(TreeNode.NSDECL);
 		node.setSymbol(stRec);
@@ -404,7 +407,10 @@ public class Parser {
 		}else if(currentToken.value() == Token.TVOID){
 			stRec.setType("void");
 		}else{
-			if(!checkToken(Token.TINTG, errMsg+"Unknown Type: Not found Integer or Real or Boolen or Void type.")) return node;
+			if(!checkToken(Token.TINTG, errMsg+"Unknown Type: Not found Integer or Real or Boolen or Void type.")){
+				currentToken = scanner.getToken();
+				return node;
+			}
 		}
 		currentToken = scanner.getToken();
 		symbolTable.put(stRec.getName(), stRec);
@@ -514,7 +520,10 @@ public class Parser {
 			}else if(currentToken.value() == Token.TBOOL){
 				stRec.setType("boolean");
 			}else{
-				if(!checkToken(Token.TINTG, errMsg+"Unknown Type ")) return node;
+				if(!checkToken(Token.TINTG, errMsg+"Unknown Type ")){
+					currentToken = scanner.getToken();
+					return node;
+				}
 			}
 			node.setValue(TreeNode.NSDECL);
 		}
