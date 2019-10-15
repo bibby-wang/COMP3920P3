@@ -319,7 +319,7 @@ public class Scanner{
 	// output to screen
 	public void printToken(Token tempToken){
 		Token sToken;
-		//TUNDF token Undefined
+		// TUNDF token Undefined
 		if (tempToken.value()==62){
 			
 			System.out.println("");

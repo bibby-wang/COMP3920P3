@@ -1,20 +1,20 @@
 // COMP3290 CD19 Compiler
-//
-//	Token class	- constructs a token on behalf of the scanner for it to be sent to the parser.
-//			- IDs/FLITs/Strings do not have their symbol table reference set in this class,
-//			    this is best done within the scanner as it makes things easier in later phases,
-//			    when we are dealing with things like variable scoping.
-//
+// 
+// 	Token class	- constructs a token on behalf of the scanner for it to be sent to the parser.
+// 			- IDs/FLITs/Strings do not have their symbol table reference set in this class,
+// 			    this is best done within the scanner as it makes things easier in later phases,
+// 			    when we are dealing with things like variable scoping.
+// 
 //    Rules of Use: The text for this class has been extracted from a working CD19 scanner.
-//			  Code released via Blackboard may not be passed on to anyone outside this
-//			  semester's COMP3290 class.
-//			  You may not complain or expect any consideration if the code does not work
-//			  the way you expect it to.
-//			  It is supplied as an assistance and may be used in your project if you wish.
-//
-//	By COMP3290 Staff - 2019	
-//
-//
+// 			  Code released via Blackboard may not be passed on to anyone outside this
+// 			  semester's COMP3290 class.
+// 			  You may not complain or expect any consideration if the code does not work
+// 			  the way you expect it to.
+// 			  It is supplied as an assistance and may be used in your project if you wish.
+// 
+// 	By COMP3290 Staff - 2019	
+// 
+// 
 
 public class Token {
 
@@ -67,7 +67,7 @@ public class Token {
 	private StRec symbol;	// symbol table entry - set by Parser in Part 3 - not used in Part 1
 						// This does require a "stub" class for StRec, however........
 
-	public Token(int t, int ln, int p, String s) {  //Constructor takes in token number, line, column & lexeme
+	public Token(int t, int ln, int p, String s) {  // Constructor takes in token number, line, column & lexeme
 		tid = t;
 		line = ln;
 		pos = p;

@@ -22,7 +22,7 @@ public class Parser {
 	// private TreeNode theNode;
 	// private Token followToken;// // next follow token
 	private SymbolTable symbolTable;
-	//private String errorList;
+	// private String errorList;
 	public Parser(Scanner scanner){
 		this.scanner = scanner;
 		symbolTable = new SymbolTable(null);
@@ -69,15 +69,15 @@ public class Parser {
 	private TreeNode program(){
 		TreeNode node = new TreeNode(TreeNode.NUNDEF);
 		// need CD19 token
-		if(!checkToken(Token.TCD19, "Not found the Keyword 'CD19'")) return node;
+		if(!checkToken(Token.TCD19, "Expect the Keyword 'CD19'")) return node;
 		// get next token
 		currentToken = scanner.getToken();
 		// need TIDEN token
-		if(!checkToken(Token.TIDEN, "Invalid initialisation: Not found ID name.")) return node;
+		if(!checkToken(Token.TIDEN, "Invalid initialisation: Expect ID name.")) return node;
 		StRec stRec = new StRec();
 		stRec.setName(currentToken.getStr());
 		stRec.setType("CD19");
-		// node.setType(stRec);
+		node.setType(stRec);
 		symbolTable.put(stRec.getName(), stRec);
 		// get next token
 		currentToken = scanner.getToken();
@@ -132,13 +132,13 @@ public class Parser {
 	private TreeNode init(){
 		TreeNode node = new TreeNode(TreeNode.NUNDEF);
 		// need TIDEN token
-		if(!checkToken(Token.TIDEN, "Invalid initialisation: Not found ID name.")) return node;
+		if(!checkToken(Token.TIDEN, "Invalid initialisation: Expect ID name.")) return node;
 		StRec stRec = new StRec();
 		stRec.setName(currentToken.getStr());
 		// next token
 		currentToken = scanner.getToken();
 		// need TEQUL token
-		if(!checkToken(Token.TEQUL, "Invalid initialisation: Not found '=' .")) return node;
+		if(!checkToken(Token.TEQUL, "Invalid initialisation: Expect '=' .")) return node;
 		currentToken = scanner.getToken();
 		// NINIT
 		node.setValue(TreeNode.NINIT);
@@ -180,23 +180,23 @@ public class Parser {
 		String errMsg="Invalid Mainbody: ";
 		TreeNode node = new TreeNode(TreeNode.NUNDEF);
 		// need TMAIN token
-		if(!checkToken(Token.TMAIN, errMsg+"Keyword missing: Not found 'MAIN'.")) return node;
+		if(!checkToken(Token.TMAIN, errMsg+"Keyword missing: Expect 'MAIN'.")) return node;
 		currentToken = scanner.getToken();
 		// left node
 		node.setLeft(slist());
 		// need TBEGN token
-		if(!checkToken(Token.TBEGN, errMsg+"Keyword missing: Not found 'BEGIN'.")) return node;
+		if(!checkToken(Token.TBEGN, errMsg+"Keyword missing: Expect 'BEGIN'.")) return node;
 		currentToken = scanner.getToken();
 		// right node
 		node.setRight(stats());
 		// need TEND token
-		if(!checkToken(Token.TEND, errMsg+"Keyword missing: Not found 'END'.")) return node;
+		if(!checkToken(Token.TEND, errMsg+"Keyword missing: Expect 'END'.")) return node;
 		currentToken = scanner.getToken();
 		// need TCD19 token
-		if(!checkToken(Token.TCD19, errMsg+"Keyword missing: Not found 'CD19'.")) return node;
+		if(!checkToken(Token.TCD19, errMsg+"Keyword missing: Expect 'CD19'.")) return node;
 		currentToken = scanner.getToken();
 		// need TIDEN token
-		if(!checkToken(Token.TIDEN, errMsg+"Not found ID name.")) return node;
+		if(!checkToken(Token.TIDEN, errMsg+"Expect ID name.")) return node;
 		StRec stRec = new StRec();
 		stRec.setName(currentToken.getStr());
 		stRec.setType("CD19");
@@ -247,12 +247,12 @@ public class Parser {
 		TreeNode node = new TreeNode(TreeNode.NUNDEF);
 		String errMsg="Invalid struct or array declaration: ";
 		// need TIDEN token
-		if(!checkToken(Token.TIDEN, errMsg+"Not found StructID or TypeID name.")) return node;
+		if(!checkToken(Token.TIDEN, errMsg+"Expect StructID or TypeID name.")) return node;
 		StRec stRec = new StRec();// first id
 		stRec.setName(currentToken.getStr());
 		currentToken = scanner.getToken();
 		// need TIS token
-		if(!checkToken(Token.TIS, errMsg+"Keyword missing: Not found 'IS'.")) return node;
+		if(!checkToken(Token.TIS, errMsg+"Keyword missing: Expect 'IS'.")) return node;
 		currentToken = scanner.getToken();
 		// NRTYPE node or NATYPE node
 		if(currentToken.value() != Token.TARAY){
@@ -262,7 +262,7 @@ public class Parser {
 			node.setSymbol(stRec);
 			node.setLeft(fields());
 			// need TEND token
-			if(!checkToken(Token.TEND, errMsg+"Keyword missing: Not found 'END'.")) return node;
+			if(!checkToken(Token.TEND, errMsg+"Keyword missing: Expect 'END'.")) return node;
 			// Confirmed as NRTYPE node
 			node.setValue(TreeNode.NRTYPE);
 			node.setType(stRec); // set node type
@@ -275,17 +275,17 @@ public class Parser {
 			symbolTable.put(stRec.getName(), stRec);
 			node.setSymbol(stRec);
 			// need TLBRK token
-			if(!checkToken(Token.TLBRK, errMsg+"Not found '['.")) return node;
+			if(!checkToken(Token.TLBRK, errMsg+"Expect '['.")) return node;
 			currentToken = scanner.getToken();
 			node.setLeft(expr());
 			// need TRBRK token
-			if(!checkToken(Token.TRBRK, errMsg+"Not found ']'.")) return node;
+			if(!checkToken(Token.TRBRK, errMsg+"Expect ']'.")) return node;
 			currentToken = scanner.getToken();
 			// need TOF token
-			if(!checkToken(Token.TOF, errMsg+"Keyword missing: Not found 'OF'.")) return node;
+			if(!checkToken(Token.TOF, errMsg+"Keyword missing: Expect 'OF'.")) return node;
 			currentToken = scanner.getToken();
 			// need TIDEN token
-			if(!checkToken(Token.TIDEN, errMsg+"Not found StructID name.")) return node;
+			if(!checkToken(Token.TIDEN, errMsg+"Expect StructID name.")) return node;
 			// StReak for the array struct
 			StRec stRec2 = new StRec();
 			stRec2.setName(currentToken.getStr());
@@ -321,12 +321,12 @@ public class Parser {
 		String errMsg = "Invalid variable declaration: ";
 		TreeNode node = new TreeNode(TreeNode.NUNDEF);
 		// need TIDEN token
-		if(!checkToken(Token.TIDEN, errMsg+"Not found ID name.")) return node;
+		if(!checkToken(Token.TIDEN, errMsg+"Expect ID name.")) return node;
 		StRec stRec = new StRec();
 		stRec.setName(currentToken.getStr());
 		currentToken = scanner.getToken();
 		// need TCOLN token
-		if(!checkToken(Token.TCOLN, errMsg+"Not found ':'")) return node;
+		if(!checkToken(Token.TCOLN, errMsg+"Expect ':'")) return node;
 		currentToken = scanner.getToken();
 		// Resolution type TINTG or TREAL or TBOOL token
 		// <stype> ::= integer | real | boolean
@@ -337,7 +337,7 @@ public class Parser {
 		}else if(currentToken.value() == Token.TBOOL){
 			stRec.setType("boolean");
 		}else{
-			if(!checkToken(Token.TINTG, errMsg+"Unknown Type: Not found Integer or Real or Boolen type")){
+			if(!checkToken(Token.TINTG, errMsg+"Unknown Type: Expect Integer or Real or Boolen.")){
 				currentToken = scanner.getToken();
 				return node;
 			}
@@ -372,15 +372,15 @@ public class Parser {
 		String errMsg = "Invalid array declaration: ";
 		TreeNode node = new TreeNode(TreeNode.NUNDEF);
 		// need TIDEN token
-		if(!checkToken(Token.TIDEN, errMsg+"Not found ID name.")) return node;
+		if(!checkToken(Token.TIDEN, errMsg+"Expect ID name.")) return node;
 		StRec stRec = new StRec();
 		stRec.setName(currentToken.getStr());
 		currentToken = scanner.getToken();
 		// need TCOLN token
-		if(!checkToken(Token.TCOLN, errMsg+"Not found ':'.")) return node;
+		if(!checkToken(Token.TCOLN, errMsg+"Expect ':'.")) return node;
 		currentToken = scanner.getToken();
 		// need TIDEN token
-		if(!checkToken(Token.TIDEN, errMsg+"Not found TypeID name.")) return node;
+		if(!checkToken(Token.TIDEN, errMsg+"Expect TypeID name.")) return node;
 		node.setValue(TreeNode.NARRD);
 		stRec.setType(currentToken.getStr());
 		node.setType(stRec);
@@ -395,22 +395,22 @@ public class Parser {
 		String errMsg = "Invalid function declaration";
 		TreeNode node = new TreeNode(TreeNode.NUNDEF);
 		// need TFUNC token
-		if(!checkToken(Token.TFUNC, errMsg+"Keyword missing: Not found 'FUNCTION'.")) return node;
+		if(!checkToken(Token.TFUNC, errMsg+"Keyword missing: Expect 'FUNCTION'.")) return node;
 		currentToken = scanner.getToken();
 		// neeed TIDEN token
-		if(!checkToken(Token.TIDEN, errMsg+"Not found ID name.")) return node;
+		if(!checkToken(Token.TIDEN, errMsg+"Expect ID name.")) return node;
 		StRec stRec = new StRec();
 		stRec.setName(currentToken.getStr());
 		currentToken = scanner.getToken();
 		// need TLPAR token
-		if(!checkToken(Token.TLPAR, errMsg+"Not found '('.")) return node;
+		if(!checkToken(Token.TLPAR, errMsg+"Expect '('.")) return node;
 		currentToken = scanner.getToken();
 		node.setLeft(plist());
 		// need TRPAR token
-		if(!checkToken(Token.TRPAR, errMsg+"Not found ')'.")) return node;
+		if(!checkToken(Token.TRPAR, errMsg+"Expect ')'.")) return node;
 		currentToken = scanner.getToken();
 		// need TCOLN token
-		if(!checkToken(Token.TCOLN, errMsg+"Not found ':'.")) return node;
+		if(!checkToken(Token.TCOLN, errMsg+"Expect ':'.")) return node;
 		currentToken = scanner.getToken();
 		// <rtype> ::= integer | real | boolean | void
 		if(currentToken.value() == Token.TINTG){
@@ -422,7 +422,7 @@ public class Parser {
 		}else if(currentToken.value() == Token.TVOID){
 			stRec.setType("void");
 		}else{
-			if(!checkToken(Token.TINTG, errMsg+"Unknown Type: Not found Integer or Real or Boolen or Void type.")){
+			if(!checkToken(Token.TINTG, errMsg+"Unknown Type: Expect Integer or Real or Boolen or Void.")){
 				currentToken = scanner.getToken();
 				return node;
 			}
@@ -431,11 +431,11 @@ public class Parser {
 		symbolTable.put(stRec.getName(), stRec);
 		node.setMiddle(locals());
 		// need TBEGN token
-		if(!checkToken(Token.TBEGN, errMsg+"Keyword missing: Not found 'BEGIN'.")) return node;
+		if(!checkToken(Token.TBEGN, errMsg+"Keyword missing: Expect 'BEGIN'.")) return node;
 		currentToken = scanner.getToken();
 		node.setRight(stats());
 		// need TEND token
-		if(!checkToken(Token.TEND, errMsg+"Keyword missing: Not found 'END'.")) return node;
+		if(!checkToken(Token.TEND, errMsg+"Keyword missing: Expect 'END'.")) return node;
 		node.setValue(TreeNode.NFUND);
 		currentToken = scanner.getToken();
 		node.setSymbol(stRec);
@@ -519,7 +519,7 @@ public class Parser {
 		stRec.setName(currentToken.getStr());
 		currentToken = scanner.getToken();
 		// need TCOLN token
-		if(!checkToken(Token.TCOLN, errMsg+"Not found ':'")) return node;
+		if(!checkToken(Token.TCOLN, errMsg+"Expect ':'")) return node;
 		currentToken = scanner.getToken();
 		if (currentToken.value() == Token.TIDEN){
 			// NARRD
@@ -535,7 +535,7 @@ public class Parser {
 			}else if(currentToken.value() == Token.TBOOL){
 				stRec.setType("boolean");
 			}else{
-				if(!checkToken(Token.TINTG, errMsg+"Unknown Type ")){
+				if(!checkToken(Token.TINTG, errMsg+"Unknown Type: Expect Integer or Real or Boolen.")){
 					currentToken = scanner.getToken();
 					return node;
 				}
@@ -558,7 +558,7 @@ public class Parser {
 		}else{
 			TreeNode node = stat();
 			// need TSEMI token
-			if(!checkToken(Token.TSEMI, "Invalid statements declaration: Not found ';'." )) return node;
+			if(!checkToken(Token.TSEMI, "Invalid statements declaration: Expect ';'." )) return node;
 			currentToken = scanner.getToken();
 			return statsb(node);
 		}
@@ -610,7 +610,7 @@ public class Parser {
 	private TreeNode statb(){
 		TreeNode node = new TreeNode(TreeNode.NUNDEF);
 		// need TIDEN token
-		if(!checkToken(Token.TIDEN, "Invalid statement declaration: Invalid Keyword.")) return node;
+		if(!checkToken(Token.TIDEN, "Invalid statement declaration: Expect ID name.")) return node;
 		StRec stRec = new StRec();
 		stRec.setName(currentToken.getStr());
 		node.setSymbol(stRec);
@@ -627,22 +627,22 @@ public class Parser {
 		String errMsg = "Invalid For structure: ";
 		TreeNode node = new TreeNode(TreeNode.NUNDEF);
 		// need TFOR token
-		if(!checkToken(Token.TFOR, errMsg+"Keyword missing: Not found 'FOR'.")) return node;
+		if(!checkToken(Token.TFOR, errMsg+"Keyword missing: Expect 'FOR'.")) return node;
 		currentToken = scanner.getToken();
 		// need TLPAR token
-		if(!checkToken(Token.TLPAR, errMsg+"Not found '('.")) return node;
+		if(!checkToken(Token.TLPAR, errMsg+"Expect '('.")) return node;
 		currentToken = scanner.getToken();
 		node.setLeft(asgnlist());
 		// need TSEMI token
-		if(!checkToken(Token.TSEMI, errMsg+"Not found ';'.")) return node;
+		if(!checkToken(Token.TSEMI, errMsg+"Expect ';'.")) return node;
 		currentToken = scanner.getToken();
 		node.setMiddle(bool());
 		// Cneed TRPAR token
-		if(!checkToken(Token.TRPAR, errMsg+"Not found ')'.")) return node;
+		if(!checkToken(Token.TRPAR, errMsg+"Expect ')'.")) return node;
 		currentToken = scanner.getToken();
 		node.setRight(stats());
 		// need TEND token
-		if(!checkToken(Token.TEND, errMsg+"Keyword missing: Not found 'END'.")) return node;
+		if(!checkToken(Token.TEND, errMsg+"Keyword missing: Expect 'END'.")) return node;
 		currentToken = scanner.getToken();
 		node.setValue(TreeNode.NFOR);
 		return node;
@@ -653,18 +653,18 @@ public class Parser {
 		String errMsg = "Invalid repeat structure: ";
 		TreeNode node = new TreeNode(TreeNode.NUNDEF);
 		// need TREPT token
-		if(!checkToken(Token.TREPT, errMsg+"Keyword missing: Not found 'REPEAT'.")) return node;
+		if(!checkToken(Token.TREPT, errMsg+"Keyword missing: Expect 'REPEAT'.")) return node;
 		currentToken = scanner.getToken();
 		// need TLPAR token
-		if(!checkToken(Token.TLPAR, errMsg+"Not found '('.")) return node;
+		if(!checkToken(Token.TLPAR, errMsg+"Expect '('.")) return node;
 		currentToken = scanner.getToken();
 		node.setLeft(asgnlist());
 		// need TRPAR token
-		if(!checkToken(Token.TRPAR, errMsg+"Not found ')'.")) return node;
+		if(!checkToken(Token.TRPAR, errMsg+"Expect ')'.")) return node;
 		currentToken = scanner.getToken();
 		node.setMiddle(stats());
 		// need TUNTL token
-		if(!checkToken(Token.TUNTL, errMsg+"Keyword missing: Not found 'UNTIL'.")) return node;
+		if(!checkToken(Token.TUNTL, errMsg+"Keyword missing: Expect 'UNTIL'.")) return node;
 		currentToken = scanner.getToken();
 		node.setRight(bool());
 		node.setValue(TreeNode.NREPT);
@@ -718,7 +718,7 @@ public class Parser {
 			nodeP.setValue(TreeNode.NDVEQ);
 			currentToken = scanner.getToken();
 		}else{
-			checkToken(Token.TEQUL, "Invalid assignment: Not found assignment operator.");
+			checkToken(Token.TEQUL, "Invalid assignment: Expect assignment operator.");
 		}
 		nodeP.setRight(bool());
 		return nodeP;
@@ -729,14 +729,14 @@ public class Parser {
 		String errMsg = "Invalid if structure: ";
 		TreeNode node = new TreeNode(TreeNode.NUNDEF);
 		// need TIFTH token
-		if(!checkToken(Token.TIFTH, errMsg+"Keyword missing: Not found 'IF'")) return node;
+		if(!checkToken(Token.TIFTH, errMsg+"Keyword missing: Expect 'IF'")) return node;
 		currentToken = scanner.getToken();
 		// need TLPAR token
-		if(!checkToken(Token.TLPAR, errMsg+"Not found '('")) return node;
+		if(!checkToken(Token.TLPAR, errMsg+"Expect '('")) return node;
 		currentToken = scanner.getToken();
 		node.setLeft(bool());
 		// need TRPAR token
-		if(!checkToken(Token.TRPAR, errMsg+"Not found ')'")) return node;
+		if(!checkToken(Token.TRPAR, errMsg+"Expect ')'")) return node;
 		currentToken = scanner.getToken();
 		node.setRight(stats());
 		return ifstatb(node);
@@ -751,12 +751,12 @@ public class Parser {
 			node.setMiddle(node.getRight());
 			node.setRight(stats());
 			// need TEND token
-			if(!checkToken(Token.TEND, errMsg+"Keyword missing: Not found 'END'")) return node;
+			if(!checkToken(Token.TEND, errMsg+"Keyword missing: Expect 'END'")) return node;
 			node.setValue(TreeNode.NIFTE);
 			currentToken = scanner.getToken();
 		}else{
 			// need TEND token
-			if(!checkToken(Token.TEND, errMsg+"Keyword missing: Not found 'END'")) return node;
+			if(!checkToken(Token.TEND, errMsg+"Keyword missing: Expect 'END'")) return node;
 			node.setValue(TreeNode.NIFTH);
 			currentToken = scanner.getToken();
 		}
@@ -789,7 +789,7 @@ public class Parser {
 	private TreeNode callstat(TreeNode node){
 		String errMsg = "Invalid call statement: ";
 		// need TLPAR token
-		if(!checkToken(Token.TLPAR, errMsg+"Not found '('.")) return node;
+		if(!checkToken(Token.TLPAR, errMsg+"Expect '('.")) return node;
 		currentToken = scanner.getToken();
 		if(currentToken.value() == Token.TRPAR){
 			// get next token
@@ -797,7 +797,7 @@ public class Parser {
 		}else{
 			node.setLeft(elist());
 			// need right paranthesis
-			if(!checkToken(Token.TRPAR, errMsg+"Not found ')'.")) return node;
+			if(!checkToken(Token.TRPAR, errMsg+"Expect ')'.")) return node;
 			currentToken = scanner.getToken();
 		}
 		node.setValue(TreeNode.NCALL);
@@ -825,7 +825,7 @@ public class Parser {
 	// <vlist> ::= <id> <var> <vlistb>
 	private TreeNode vlist(){
 		TreeNode node = new TreeNode(TreeNode.NUNDEF);
-		if(!checkToken(Token.TIDEN,"Invalid variable declaration: Not found ID name." )) return node;
+		if(!checkToken(Token.TIDEN,"Invalid variable declaration: Expect ID name." )) return node;
 		StRec stRec = new StRec();
 		stRec.setName(currentToken.getStr());
 		// get next token
@@ -855,13 +855,13 @@ public class Parser {
 			currentToken = scanner.getToken();
 			node.setLeft(expr());
 			// need TRBRK token
-			if(!checkToken(Token.TRBRK, errMsg+"Not found ']'.")) return node;
+			if(!checkToken(Token.TRBRK, errMsg+"Expect ']'.")) return node;
 			currentToken = scanner.getToken();
 			// need TDOT token
-			if(!checkToken(Token.TDOT, errMsg+"Not found '.'.")) return node;
+			if(!checkToken(Token.TDOT, errMsg+"Expect '.'.")) return node;
 			currentToken = scanner.getToken();
 			// need TIDEN token
-			if(!checkToken(Token.TIDEN, errMsg+".")) return node;
+			if(!checkToken(Token.TIDEN, errMsg+"Expect ID name.")) return node;
 			StRec stRec = new StRec(currentToken.getStr());
 			currentToken = scanner.getToken();
 			node.setType(stRec);
@@ -1098,11 +1098,11 @@ public class Parser {
 			return exponentb();
 		}else{
 			// need TLPAR token
-			if(!checkToken(Token.TLPAR, "Invalid exponent operation: Not found '('. ")) return node;
+			if(!checkToken(Token.TLPAR, "Invalid exponent operation: Expect '('. ")) return node;
 			currentToken = scanner.getToken();
 			TreeNode tempNode = bool();
 			// need TRPAR token
-			if(!checkToken(Token.TRPAR, "Invalid exponent operation: Not found ')'. ")) return node;
+			if(!checkToken(Token.TRPAR, "Invalid exponent operation: Expect ')'. ")) return node;
 			currentToken = scanner.getToken();
 			return tempNode;
 		}
@@ -1127,7 +1127,7 @@ public class Parser {
 	private TreeNode fncall(TreeNode node){
 		String errMsg = "Invalid function call: ";
 		// need TLPAR token
-		if(!checkToken(Token.TLPAR, errMsg+"Not found '('.")) return node;
+		if(!checkToken(Token.TLPAR, errMsg+"Expect '('.")) return node;
 		currentToken = scanner.getToken();
 		if(currentToken.value() == Token.TRPAR){
 			// get next token
@@ -1135,7 +1135,7 @@ public class Parser {
 		}else{
 			node.setLeft(elist());
 			// need right paranthesis
-			if(!checkToken(Token.TRPAR, errMsg+"Not found ')'.")) return node;
+			if(!checkToken(Token.TRPAR, errMsg+"Expect ')'.")) return node;
 			currentToken = scanner.getToken();
 		}
 		node.setValue(TreeNode.NFCALL);
@@ -1166,7 +1166,7 @@ public class Parser {
 			// get next token
 			currentToken = scanner.getToken();
 			node.setSymbol(stRec);
-			node.setType(stRec); //set node type
+			node.setType(stRec); // set node type
 			symbolTable.put(stRec.getName(), stRec);
 			return node;
 		}

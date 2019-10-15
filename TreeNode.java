@@ -1,8 +1,8 @@
-//	COMP3290 CD19 Compiler
-//		Syntax Tree Node Class - Builds a syntax tree node
-//
-//	By COMP3290 Staff - 2019	
-//
+// 	COMP3290 CD19 Compiler
+// 		Syntax Tree Node Class - Builds a syntax tree node
+// 
+// 	By COMP3290 Staff - 2019	
+// 
 
 import java.io.*;
 
@@ -99,14 +99,14 @@ public class TreeNode {
 	public void setType(StRec st) { type = st; }
 
 
-  //
+  // 
   // Call is: TreeNode.printTree(outfile, rootOfTree);
-  //	-> prints tree pre-order as a flat 7 values per line
-  //
+  // 	-> prints tree pre-order as a flat 7 values per line
+  // 
   //   I am used to this type of print - if you cannot use
-  //	it then you are free to implement your own XML or
-  //	whatever you like tree output routine.
-  //
+  // 	it then you are free to implement your own XML or
+  // 	whatever you like tree output routine.
+  // 
 	// public static void printTree(PrintStream out, TreeNode tr) {
 		// if (tr.nodeValue == NPROG) count = 0;
 		// out.print(PRINTNODE[tr.nodeValue]+" ");
@@ -128,9 +128,9 @@ public class TreeNode {
 		// if (tr.nodeValue == NPROG && count%7 != 0) out.println();
 	// }
 	
- 	//modified by bibby 
-	//change: prints tree pre-order as a flat 10 columns per line
-	//and	each columns has 7 characters
+ 	// modified by bibby 
+	// change: prints tree pre-order as a flat 10 columns per line
+	// and	each columns has 7 characters
 	private static String formatStr(String Str){
 		String S="";
 		int c = 6-(Str.length()%7);
@@ -143,14 +143,14 @@ public class TreeNode {
 		String fString=formatStr(PRINTNODE[tr.nodeValue])+" ";
 		out.print(fString);
 		count+=(fString.length()/7);
-		//new line
+		// new line
 		if (count%10 == 0||count>10){out.println();  count=0;}
 		
 		if (tr.symbol != null) {
 			fString=formatStr(tr.symbol.getName()) + " ";
 			out.print(fString);
 			count+=(fString.length()/7);
-			//new line
+			// new line
 			if (count%10 == 0||count>10) {out.println();  count=0;}
 
 		}
@@ -159,7 +159,7 @@ public class TreeNode {
 			fString=formatStr(tr.type.getName()) + " ";
 			out.print(fString);
 			count+=(fString.length()/7);
-			//new line
+			// new line
 			if (count%10 == 0||count>10){ out.println();  count=0;}
 		}
 		if (tr.left   != null) { printTree(out,tr.left);   }

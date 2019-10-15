@@ -23,7 +23,7 @@ public class A3{
 				if (i>0)System.out.println("");
 				System.out.println("=====File: "+args[i]+"=====\r\n");
 
-				//sacnner
+				// sacnner
 				Scanner scanner=new Scanner(args[i]);
 			
 				// Modify the output file name
@@ -31,7 +31,7 @@ public class A3{
 				
 				// output file
 				PrintWriter outFile= new PrintWriter(new FileWriter(fileN+"_tree.cdt"));
-				//parser
+				// parser
 				Parser parser=new Parser(scanner);	
 				// get the Syntax Tree and write to file: Source File name _tree.cdr)
 				TreeNode tree=parser.getSyntaxTree();
@@ -39,13 +39,7 @@ public class A3{
 				
 				outFile.close();
 
-				if (!parser.getErrorList().isEmpty()){
-					System.out.println("Found "+parser.getErrorList().size()+" Errors.");
-					for (CompilerErrors errorlist : parser.getErrorList()){
-						System.out.println(errorlist.getMessage());
-					}
-
-				}else{
+				if (parser.getErrorList().isEmpty()){
 					// no errors
 					// Output to the terminal when there is no error in the program
 					BufferedReader br = new BufferedReader(new FileReader(fileN+"_tree.cdt"));
@@ -56,6 +50,14 @@ public class A3{
 					while ((printLine = br.readLine()) != null) {
 						System.out.println(printLine);
 					}
+				}else{
+					// found error
+
+					System.out.println("Found "+parser.getErrorList().size()+" Errors.");
+					for (CompilerErrors errorlist : parser.getErrorList()){
+						System.out.println(errorlist.getMessage());
+					}
+
 				}
 	
 				System.out.println("\r\n=*= Output File: "+fileN+"_tree.cdt");
