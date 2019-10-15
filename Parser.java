@@ -9,20 +9,28 @@
 // Parser LL1
 // 
 // TreeNode  Call is: TreeNode.printTree(outfile, rootOfTree);
+import java.util.ArrayList;
+
+// ????? to do list
+// check node.setType(stRec);
+ 
+
 public class Parser {
 	private Scanner scanner;  // scan and get token
 	private Token currentToken; // Current Token
+	private ArrayList<CompilerErrors> errorList;
 	// private TreeNode theNode;
 	// private Token followToken;// // next follow token
 	private SymbolTable symbolTable;
-	private String errorList;
+	//private String errorList;
 	public Parser(Scanner scanner){
 		this.scanner = scanner;
 		symbolTable = new SymbolTable(null);
-		errorList = "";
+		errorList = new ArrayList<CompilerErrors>();
+		
 	}
 	// all errors
-	public String getErrorList(){
+	public ArrayList<CompilerErrors> getErrorList(){
 		return errorList;
 	}
 	// check each token for errors and return the appropriate information.
@@ -30,16 +38,22 @@ public class Parser {
 		// error type
 		if(currentToken.value() != expected){
 			// location of the error in source code
-			errorList+="\r\n [Line: "+ currentToken.getLn()// line of code
-						+" Column: "+ currentToken.getPos()// column of code
-						+"] ";
+			String errorType="";
+			
+			int line=currentToken.getLn();// line of code
+			int column=currentToken.getPos();// column of code
+	
 			if(currentToken.value() == Token.TUNDF){
 				// the undefined token TUNDF
-				errorList+="(Lexical Error): " + currentToken.getStr();// lexeme
+				// Lexical error
+				errorType="Lexical ";
+				message=currentToken.getStr();// lexeme
 			}else{
 				// Syntax error
-				errorList+="(Syntax Error): "+ message;
+				errorType="Syntax ";
 			}
+			errorList.add(new CompilerErrors(errorType,line,column,message));
+			
 			return false;
 		}
 		return true;
@@ -251,6 +265,7 @@ public class Parser {
 			if(!checkToken(Token.TEND, errMsg+"Keyword missing: Not found 'END'.")) return node;
 			// Confirmed as NRTYPE node
 			node.setValue(TreeNode.NRTYPE);
+			node.setType(stRec); // set node type
 			currentToken = scanner.getToken();
 			return node;
 		}else{
@@ -275,7 +290,7 @@ public class Parser {
 			StRec stRec2 = new StRec();
 			stRec2.setName(currentToken.getStr());
 			stRec2.setType("Struct");
-			node.setType(stRec2);
+			node.setType(stRec2);  // set node type
 			symbolTable.put(stRec2.getName(), stRec2);
 			// Confirmed as NATYPE node
 			node.setValue(TreeNode.NATYPE);
@@ -329,7 +344,7 @@ public class Parser {
 		}
 		node.setValue(TreeNode.NSDECL);
 		node.setSymbol(stRec);
-		// node.setType(stRec); // ?? need or not ??
+		node.setType(stRec);
 		symbolTable.put(stRec.getName(), stRec);
 		currentToken = scanner.getToken();
 		return node;
@@ -424,6 +439,7 @@ public class Parser {
 		node.setValue(TreeNode.NFUND);
 		currentToken = scanner.getToken();
 		node.setSymbol(stRec);
+		node.setType(stRec);  // set type
 		return node;
 	}
 	// <plist> ::= <params> | ε
@@ -509,7 +525,6 @@ public class Parser {
 			// NARRD
 			node.setValue(TreeNode.NARRD);
 			stRec.setType(currentToken.getStr());
-			node.setType(stRec);
 		}else{
 			// NSDECL
 			// <stype> ::= integer | real | boolean
@@ -527,6 +542,7 @@ public class Parser {
 			}
 			node.setValue(TreeNode.NSDECL);
 		}
+		node.setType(stRec);// add type
 		node.setSymbol(stRec);
 		symbolTable.put(stRec.getName(), stRec);
 		currentToken = scanner.getToken();
@@ -1150,6 +1166,7 @@ public class Parser {
 			// get next token
 			currentToken = scanner.getToken();
 			node.setSymbol(stRec);
+			node.setType(stRec); //set node type
 			symbolTable.put(stRec.getName(), stRec);
 			return node;
 		}

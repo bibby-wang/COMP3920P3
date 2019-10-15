@@ -12,6 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
 public class A3{
 	
 	public static void main(String[] args) throws IOException{
@@ -35,20 +36,24 @@ public class A3{
 				// get the Syntax Tree and write to file: Source File name _tree.cdr)
 				TreeNode tree=parser.getSyntaxTree();
 				TreeNode.printTree(outFile, tree);
-				System.out.println("Pre-Order Traversal:");
+				
 				outFile.close();
 
-				if (parser.getErrorList()!=""){
-					System.out.println("=***=Errors: =***=");
-					System.out.println(parser.getErrorList());
+				if (!parser.getErrorList().isEmpty()){
+					System.out.println("Found "+parser.getErrorList().size()+" Errors.");
+					for (CompilerErrors errorlist : parser.getErrorList()){
+						System.out.println(errorlist.getMessage());
+					}
+
 				}else{
 					// no errors
 					// Output to the terminal when there is no error in the program
 					BufferedReader br = new BufferedReader(new FileReader(fileN+"_tree.cdt"));
+					System.out.println("=====No errors found:");
+					System.out.println("Pre-Order Traversal:");
 					String printLine;
 					// print by line
 					while ((printLine = br.readLine()) != null) {
-
 						System.out.println(printLine);
 					}
 				}
