@@ -11,9 +11,6 @@
 // TreeNode  Call is: TreeNode.printTree(outfile, rootOfTree);
 import java.util.ArrayList;
 
-// ????? to do list
-// check node.setType(stRec);
- 
 
 public class Parser {
 	private Scanner scanner;  // scan and get token
@@ -984,7 +981,7 @@ public class Parser {
 			currentToken = scanner.getToken();
 			node.setValue(TreeNode.NGEQ);
 		}else{
-			checkToken(Token.TEQEQ, "Invalid logic operation.");
+			checkToken(Token.TEQEQ, "Invalid relational operation.");
 			return node;
 		}
 		return node;

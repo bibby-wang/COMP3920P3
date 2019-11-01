@@ -153,9 +153,7 @@ public class TreeNode {
 			// new line
 			if (count%10 == 0||count>10) {out.println();  count=0;}
 
-		}
-		
-		if (tr.type   != null) {
+		}else if (tr.type   != null) {
 			fString=formatStr(tr.type.getName()) + " ";
 			out.print(fString);
 			count+=(fString.length()/7);

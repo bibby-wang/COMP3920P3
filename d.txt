@@ -1,0 +1,106 @@
+/-- Should validly cover most, if not all keywords, structures, arrays, etc
+
+CD19 d
+
+constants
+	MAXINPUTSIZE = 20, test = 40.6
+
+types
+	point is
+		xPos : real,
+		yPos : real
+	end
+	points is array [MAXINPUTSIZE] of point
+	pointer is 
+		lop : integer,
+		yes : boolean,
+		yop : real
+	end
+
+arrays
+	inputPoints : points, outputPoints : points
+
+function getInput(inputArray : points, test : integer) : integer
+	arraySize : integer, i  : integer
+	begin
+	printline "Enter number of points.";
+	input arraySize;
+	repeat()
+		printline "number of points must be less than 20 and greater than 2.";
+		input arraySize;
+	until(arraySize > MAXINPUTSIZE AND arraySize < 2);
+	for(i = arraySize; i > 0)
+		printline "input X";
+		input points[i].xPos;
+		printline "input Y";
+		input points[i].yPos;
+	end
+	return arraySize;
+end
+
+function getlinput(inputArray : points, test : integer, test : Test) : integer
+	arraySize : integer, i  : integer, HeIS : real
+	begin
+	
+	printline "Enter number of points.";
+	
+	print "I feel Your prescense amongst us";
+	
+	input arraySize;
+	
+	repeat()
+		printline "number of points must be less than 20 and greater than 2.";
+		input arraySize;
+	until(arraySize > MAXINPUTSIZE AND arraySize < 2);
+	
+	for(i = arraySize; i > 0)
+		printline "input X";
+		input points[i].xPos;
+		printline "input Y";
+		input points[i].yPos;
+	end
+	input canYourHearTheRumble;
+	return arraySize;
+end
+
+function calculateArea(inputArray : points, arraySize : integer) : real
+	area : real, count : int 
+	begin
+	for (i = 0; i < arraySize - 2)
+		area += (inputArray[i].xPos +inputArray[i+1].xPos) * (inputArray[i1].yPos - inputArray[i].yPos);
+	end
+	area *= 0.5;
+	return area;
+end	
+
+function Circe(inputArray : points, arraySize : integer) : real
+	area : real, count : int 
+	begin
+	
+	repeat(area = 7)
+		printline "number of points must be less than 20 and greater than 2.";
+		input arraySize;
+		area += 1;
+	until(arraySize > MAXINPUTSIZE AND arraySize > 2);
+	
+	area *= 0.5;
+	return area;
+end	
+	
+main
+	arraySize : integer, test : real
+begin
+	if (true) 
+		arraySize = 7;
+	end
+	
+	if (false) 
+		arraySize = 9; 
+	else
+		arraySize = 8;
+	end
+	
+end CD19 d
+	
+
+/-- late remark...just to test that

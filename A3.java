@@ -30,7 +30,7 @@ public class A3{
 				String fileN= args[i].substring(0,args[i].lastIndexOf('.'));
 				
 				// output file
-				PrintWriter outFile= new PrintWriter(new FileWriter(fileN+"_tree.cdt"));
+				PrintWriter outFile= new PrintWriter(new FileWriter(fileN+".lis"));
 				// parser
 				Parser parser=new Parser(scanner);	
 				// get the Syntax Tree and write to file: Source File name _tree.cdr)
@@ -38,30 +38,68 @@ public class A3{
 				TreeNode.printTree(outFile, tree);
 				
 				outFile.close();
-
+				
 				if (parser.getErrorList().isEmpty()){
 					// no errors
 					// Output to the terminal when there is no error in the program
-					BufferedReader br = new BufferedReader(new FileReader(fileN+"_tree.cdt"));
-					System.out.println("=====No errors found:");
+					
+					System.out.println("No errors found.");
 					System.out.println("Pre-Order Traversal:");
-					String printLine;
+					BufferedReader br = new BufferedReader(new FileReader(fileN+".lis"));
 					// print by line
+					String printLine;
 					while ((printLine = br.readLine()) != null) {
 						System.out.println(printLine);
 					}
 				}else{
 					// found error
-
+					
+					
+					//??????
+					// read the cd19 code and add a line number then add errors then add the NODE TREE
+					// need output Listing file
+					///////////////// *.lis
+					// 1: code...
+					// 2: code...
+					// 3: code...
+					//  ......
+					// n: end code
+					// error list 1 line:x col:y....
+					// error list 2 line:x col:y....
+					// error list 3 line:x col:y....
+					///////////////////
+					
+					// dirty code but working 
+					// need output all to file ".lis"
+					///////////////////////////////////////////
+					BufferedReader br = new BufferedReader(new FileReader(args[i]));
+					String SSSS="";
+					String printLine;
+					int num=0;
+					while ((printLine = br.readLine()) != null) {
+						num++;
+						SSSS+=num+": "+printLine+"\r\n";
+					}
+					System.out.println(SSSS);
 					System.out.println("Found "+parser.getErrorList().size()+" Errors.");
 					for (CompilerErrors errorlist : parser.getErrorList()){
 						System.out.println(errorlist.getMessage());
 					}
+					System.out.println("");
+					System.out.println("Pre-Order Traversal: ");
+					BufferedReader br1 = new BufferedReader(new FileReader(fileN+".lis"));
+					// print by line
+					String printLine1;
+					while ((printLine1 = br1.readLine()) != null) {
+						System.out.println(printLine1);
+					}
+					/////////////////////////////////
+					
 
 				}
 	
-				System.out.println("\r\n=*= Output File: "+fileN+"_tree.cdt");
-				System.out.println("=====Finished: "+args[i]+"=====");				
+				//System.out.println("\r\n=*= Output File: "+fileN+"_tree.cdt");
+				System.out.println("=====Finished the file: "+args[i]+"=====");				
 			}
 			
 		}else{

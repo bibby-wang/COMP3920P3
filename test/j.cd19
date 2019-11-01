@@ -1,13 +1,33 @@
 CD19 ExampleAST
 constants
-m =10+15 , l=1-funcCall1()
+    m=a+15*b, l=1-funcCall1()
 types
-new_struct is k:integer,j:boolean,i:real end
-new_array is array [ 10 + 10 ] of new_struct
-arrays arrInstance1 : new_array, arrInstance2: new_array
-function my_func (p1 : integer, p2 : boolean, p3 : real, pArr : new_array) :
-integer begin return 10; end
-function anotherFunc() : void
+    new_struct is
+        k:integer,
+        j:boolean,
+        i:real
+    end
+    struct_two is
+        kk:real,
+        jj:boolean
+    end
+    new_array is array [10 + 10] of new_struct
+    another_arr is array[funcCall(true)] of struct_two
+arrays
+    arrInstance1 : new_array,
+    arrInstance2: new_array
+function my_func (p1 : integer,
+                  p2 : boolean,
+                  p3 : real,
+                  pArr : new_array) : integer
+    begin
+        if (this > 100 + 10)
+            var += funcCall();
+            another = 10;
+        end
+        return 10;
+    end
+function anotherFunc () : void
     local1 : boolean,
     local2 : integer,
     local3 : real,
@@ -17,15 +37,37 @@ function anotherFunc() : void
         print "Hello", 10*20-30/100, "last one";
         fnCall();
         local3 = 12.12;
-        localArr[fnCall2()].rand = true;
+        localArr[fnCall2()].rand -= true;
         return;
     end
 /-- function my_func (hahaha:integer) : integer
 main
-i:integer, j:integer, k:integer
-begin
-input i;
-input j;
-k = i + j;
-printline k;
-end CD19 ExampleAST
+    i:integer, j:integer, k:integer
+    begin
+        input i;
+        input j;
+        k = i + j;
+        /-- for loop
+        for(i = 0, j = 1; iden > 100)
+            print "Hello";
+            ass *= 10 + 10 - funcCall();
+            bass /= expFunc() ^ true;
+            var = 10;
+        end
+        /-- repeat loop
+        repeat()
+            print "loop";
+            v += 1;
+        until v > 100;
+        /-- another if
+        if (not funcCall() and 10 + 10 > 10)
+            input k;
+            funcCall();
+        else
+            elseFuncCall();
+            boolVar = funcCallBool() != true;
+        end
+        printline k;
+        printline k, "HelloPrList!";
+    end
+CD19 ExampleAST

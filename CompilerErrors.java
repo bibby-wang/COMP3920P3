@@ -6,8 +6,8 @@
 // Due: September 27th
 // Binbin.Wang C3214157
 
-// Syntax Error : line 27 - invalid if-statement (missing Boolean experession)
-// Semantic Error : line 54 - no return statement for function (int myFunction (int, int))
+// <TYPE> Error : line[<LINE NUMBER>], column[<COLUMN NUMBER>]: <ERROR MESSAGE>
+
 
 public class CompilerErrors{
 	private String errorMessage;  
@@ -20,11 +20,14 @@ public class CompilerErrors{
 		this.setTLC(type,line,column);
 		this.setMessage(message);
 	}
+	
 	private void setTLC(String type,int line,int column){
-		errorMessage=type+" Error : line["+line+"], column["+column+"]- ";
+		errorMessage=type+" Error : line["+line+"], column["+column+"]: ";
 	}
+	
 	public String getMessage(){
 		return errorMessage;
+	
 	}
 	public void setMessage(String message){
 		errorMessage+=message;

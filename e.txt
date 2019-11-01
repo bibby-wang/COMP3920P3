@@ -1,0 +1,75 @@
+/-- Cartseian plane shape area calculator - should PASS
+/-- 
+
+cd19 e
+
+    constants
+      /-- max is 21 and not 21 as the first point is added onto the end of the array for the calculation
+      max = 21
+    
+    types
+      point is
+            x : real,
+            y : real
+      end
+
+      Shape is array[len] of box
+
+   arrays
+    myShape : Shape
+
+   /--- Function to read in how many points the shape has from the user 
+   function getNumPoints () : integer
+        numPoints : integer
+        begin
+          printline "How many Points does your shape have ?";
+          input numPoints;
+          return numPoints;
+        end
+
+
+   /-- Passing shape object where this function edits it
+   function newPoint (index : integer, myShape : Shape) : void
+        x : real,
+        y : real
+        begin
+          printline "Point ", index;
+          printline "x value :";
+          input x;
+          printline "y value :";
+          input y;
+          myShape[i].x = x;
+          myShape[i].y = y;
+          return;
+        end
+   main
+    numPoints : integer,
+    area : real,
+    i : integer,
+    j : integer
+
+   begin
+    /-- Get how many points there are in the shape
+    /-- Creating however many points 
+    for(i=0; i<=numPoints)
+      newPoint(i, myShape);
+      i += 1;
+    end
+
+    /-- adding the first point to the last point
+    myShape[numPoints].x=myShape[0].x;
+    myShape[numPoints].y=myShape[0].y;
+    /-- Calculating the area
+    area = 0;
+    
+    for(j=0; j<=numPoints + 1)
+      area += 10;
+      j +=1;
+    end
+    
+    area = area/2;
+    printline " The Area is found to be ", area;
+   
+   end 
+
+cd19 e
