@@ -1,6 +1,0 @@
-NPROG  b      b      NMAIN  NSDLST NSDECL i      i      NSDECL looping       
-looping       NSTATS NASGN  NSIMV  looping       NTRUE  NSTATS NFOR   
-NASGN  NSIMV  i      NILIT  0      NSIMV  looping       NSTATS NPLEQ  
-NSIMV  i      NILIT  1      NIFTH  NGEQ   NSIMV  i      NILIT  8      
-NASGN  NSIMV  looping       NFALS  NPRLN  NPRLST NSTRG  value of i is        
-value of i is        NSIMV  i      

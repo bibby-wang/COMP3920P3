@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.util.ArrayList;
 public class A3{
@@ -30,7 +31,7 @@ public class A3{
 				String fileN= args[i].substring(0,args[i].lastIndexOf('.'));
 				
 				// output file
-				PrintWriter outFile= new PrintWriter(new FileWriter(fileN+".lis"));
+				PrintWriter outFile= new PrintWriter(new FileWriter(fileN+".lst"));
 				// parser
 				Parser parser=new Parser(scanner);	
 				// get the Syntax Tree and write to file: Source File name _tree.cdr)
@@ -45,7 +46,7 @@ public class A3{
 					
 					System.out.println("No errors found.");
 					System.out.println("Pre-Order Traversal:");
-					BufferedReader br = new BufferedReader(new FileReader(fileN+".lis"));
+					BufferedReader br = new BufferedReader(new FileReader(fileN+".lst"));
 					// print by line
 					String printLine;
 					while ((printLine = br.readLine()) != null) {
@@ -56,8 +57,8 @@ public class A3{
 					
 					
 					//??????
-					// read the cd19 code and add a line number then add errors then add the NODE TREE
 					// need output Listing file
+					// read the cd19 code and add a line number then add errors then add the NODE TREE
 					///////////////// *.lis
 					// 1: code...
 					// 2: code...
@@ -70,7 +71,7 @@ public class A3{
 					///////////////////
 					
 					// dirty code but working 
-					// need output all to file ".lis"
+					// need output all to file ".lst"
 					///////////////////////////////////////////
 					BufferedReader br = new BufferedReader(new FileReader(args[i]));
 					String SSSS="";
@@ -82,19 +83,26 @@ public class A3{
 					}
 					System.out.println(SSSS);
 					System.out.println("Found "+parser.getErrorList().size()+" Errors.");
+					SSSS+="\r\n";
 					for (CompilerErrors errorlist : parser.getErrorList()){
+						SSSS+=errorlist.getMessage()+"\r\n";
 						System.out.println(errorlist.getMessage());
 					}
 					System.out.println("");
 					System.out.println("Pre-Order Traversal: ");
-					BufferedReader br1 = new BufferedReader(new FileReader(fileN+".lis"));
+					SSSS+="\r\nPre-Order Traversal: \r\n";
+					BufferedReader br1 = new BufferedReader(new FileReader(fileN+".lst"));
 					// print by line
 					String printLine1;
 					while ((printLine1 = br1.readLine()) != null) {
+						SSSS+=printLine1+"\r\n";
 						System.out.println(printLine1);
 					}
 					/////////////////////////////////
-					
+					BufferedWriter outlis = new BufferedWriter(new FileWriter(fileN+".lst"));
+					outlis.write(SSSS);
+					outlis.close();
+					////////////////////////////
 
 				}
 	

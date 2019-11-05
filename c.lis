@@ -1,6 +1,0 @@
-NPROG  c      NGLOB  NINIT  SIZE   NILIT  10     NILIST NRTYPE person 
-NFLIST NSDECL age    NSDECL height NATYPE students      NSIMV  SIZE   
-NARRD  comp3290      NMAIN  NSDECL val    NSTATS NASGN  NARRV  comp3290      
-NILIT  0      NILIT  22     NSTATS NASGN  NARRV  comp3290      NILIT  
-0      NFLIT  194.6  NPRLN  NPRLST NSTRG  Student with age     NPRLST 
-NARRV  comp3290      NILIT  0      NSTRG   added to array      
